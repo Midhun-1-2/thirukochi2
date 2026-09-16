@@ -274,60 +274,69 @@ function MobileHeader({ onBell, unread, entrance = false }: { onBell: () => void
   )
 }
 
-/* ---------- Mobile bottom nav ---------- */
+/* ---------- Mobile bottom nav ----------
+   A jewellery-tray rail: full-width dark velvet with an arched gold
+   rim. Icons rest on the tray; the current one is lifted into a gold
+   chip that stretches open to reveal its name, and the chip glides
+   along the tray when you move. */
 function BottomNav({ entrance = false }: { entrance?: boolean }) {
   const location = useLocation()
   const reduced = useReducedMotion()
   return (
-    <nav
-      aria-label="Primary"
-      className="fixed inset-x-3 z-40 md:hidden"
-      style={{ bottom: 'calc(var(--safe-bottom) + 10px)' }}
-    >
-      <motion.ul
-        className="relative flex items-end justify-between overflow-visible rounded-[28px] border border-gold-light/20 maroon-surface px-1.5 pb-1.5 pt-1 shadow-maroon"
+    <nav aria-label="Primary" className="fixed inset-x-0 bottom-0 z-40 md:hidden">
+      <motion.div
+        className="relative mx-auto max-w-lg rounded-t-[30px] bg-maroon-deep/95 shadow-[0_-14px_36px_-18px_rgba(0,0,0,0.75)] backdrop-blur-md"
+        style={{ paddingBottom: 'var(--safe-bottom)' }}
         initial={entrance && !reduced ? { y: 96, opacity: 0 } : false}
         animate={{ y: 0, opacity: 1 }}
         transition={{ ...spring.soft, delay: 0.3 }}
       >
-        <span className="pointer-events-none absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-gold-light/60 to-transparent" aria-hidden="true" />
-        {primaryNav.map((item) => {
-          const active = isNavActive(item, location.pathname)
-          return (
-            <li key={item.to} className="flex-1">
-              <NavLink
-                to={item.to}
-                aria-current={active ? 'page' : undefined}
-                aria-label={item.label}
-                className={cn(
-                  'relative flex h-[58px] flex-col items-center justify-end gap-1 pb-1 text-[10px] font-medium tracking-wide transition-colors duration-300',
-                  active ? 'text-gold-light' : 'text-cream/55',
-                )}
-              >
-                <span className="relative flex h-9 w-9 items-center justify-center">
+        {/* arched gold rim + inner highlight */}
+        <span className="pointer-events-none absolute inset-x-0 top-0 h-[30px] rounded-t-[30px] border-t border-gold/60" aria-hidden="true" />
+        <span className="pointer-events-none absolute inset-x-12 top-0 h-px bg-gradient-to-r from-transparent via-gold-light to-transparent" aria-hidden="true" />
+        <ul className="flex items-center gap-1 px-3 pb-2.5 pt-3">
+          {primaryNav.map((item) => {
+            const active = isNavActive(item, location.pathname)
+            return (
+              <motion.li key={item.to} layout transition={reduced ? { duration: 0 } : spring.snappy} className={cn('flex justify-center', active ? 'flex-[2]' : 'flex-1')}>
+                <NavLink
+                  to={item.to}
+                  aria-current={active ? 'page' : undefined}
+                  aria-label={item.label}
+                  className={cn(
+                    'relative flex h-11 items-center justify-center rounded-full transition-colors duration-300',
+                    active ? 'px-4 text-maroon-deep' : 'w-11 text-cream/60 hover:text-cream',
+                  )}
+                >
                   {active && (
                     <motion.span
-                      layoutId="bottomnav-disc"
+                      layoutId="bottomnav-chip"
                       transition={reduced ? { duration: 0 } : spring.snappy}
-                      className="absolute -top-3 h-11 w-11 rounded-full gold-surface shadow-[0_8px_20px_-6px_rgba(212,175,55,0.7)] ring-4 ring-maroon"
+                      className="absolute inset-0 rounded-full gold-surface shadow-[0_8px_20px_-8px_rgba(212,175,55,0.9),inset_0_1px_0_rgba(255,255,255,0.35)]"
                       aria-hidden="true"
                     />
                   )}
-                  <motion.span
-                    className={cn('relative z-10', active && 'text-maroon-deep')}
-                    // disc sits 12px above the 36px slot (centre at -8 from the icon's rest centre)
-                    animate={active ? { y: -8, scale: 1.05 } : { y: 0, scale: 1 }}
-                    transition={reduced ? { duration: 0 } : spring.snappy}
-                  >
-                    <item.icon size={20} strokeWidth={active ? 2 : 1.7} />
-                  </motion.span>
-                </span>
-                <span className="relative z-10 leading-none">{item.label}</span>
-              </NavLink>
-            </li>
-          )
-        })}
-      </motion.ul>
+                  <item.icon size={20} strokeWidth={active ? 2.1 : 1.7} className="relative z-10 shrink-0" />
+                  <AnimatePresence initial={false}>
+                    {active && (
+                      <motion.span
+                        key="label"
+                        className="relative z-10 overflow-hidden whitespace-nowrap text-[12px] font-semibold tracking-wide"
+                        initial={reduced ? { opacity: 0 } : { opacity: 0, width: 0, marginLeft: 0 }}
+                        animate={reduced ? { opacity: 1 } : { opacity: 1, width: 'auto', marginLeft: 8 }}
+                        exit={reduced ? { opacity: 0 } : { opacity: 0, width: 0, marginLeft: 0 }}
+                        transition={{ duration: 0.22, ease: 'easeOut' }}
+                      >
+                        {item.label}
+                      </motion.span>
+                    )}
+                  </AnimatePresence>
+                </NavLink>
+              </motion.li>
+            )
+          })}
+        </ul>
+      </motion.div>
     </nav>
   )
 }
