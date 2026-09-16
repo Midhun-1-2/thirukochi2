@@ -127,18 +127,48 @@ export function useMockQuery<T>(loader: () => T, deps: unknown[], opts: MockQuer
 }
 
 /* ---------- misc ---------- */
+/**
+ * Freezes the page behind a dialog. `overflow: hidden` alone is ignored by
+ * touch scrolling on iOS/Android, so the body is pinned with position: fixed
+ * at its current scroll offset and put back on unlock.
+ */
 export function useScrollLock(locked: boolean) {
   useEffect(() => {
     if (!locked) return
     const body = document.body
-    const prev = { overflow: body.style.overflow, paddingRight: body.style.paddingRight }
+    const html = document.documentElement
+    const prev = {
+      overflow: body.style.overflow,
+      paddingRight: body.style.paddingRight,
+      position: body.style.position,
+      top: body.style.top,
+      left: body.style.left,
+      right: body.style.right,
+      width: body.style.width,
+      scrollBehavior: html.style.scrollBehavior,
+    }
+    const scrollY = window.scrollY
     // keep the page from jumping sideways when the desktop scrollbar disappears
-    const gutter = window.innerWidth - document.documentElement.clientWidth
+    const gutter = window.innerWidth - html.clientWidth
     body.style.overflow = 'hidden'
     if (gutter > 0) body.style.paddingRight = `${gutter}px`
+    body.style.position = 'fixed'
+    body.style.top = `-${scrollY}px`
+    body.style.left = '0'
+    body.style.right = '0'
+    body.style.width = '100%'
     return () => {
       body.style.overflow = prev.overflow
       body.style.paddingRight = prev.paddingRight
+      body.style.position = prev.position
+      body.style.top = prev.top
+      body.style.left = prev.left
+      body.style.right = prev.right
+      body.style.width = prev.width
+      // restore the offset instantly — smooth scrolling would animate the jump
+      html.style.scrollBehavior = 'auto'
+      window.scrollTo(0, scrollY)
+      html.style.scrollBehavior = prev.scrollBehavior
     }
   }, [locked])
 }

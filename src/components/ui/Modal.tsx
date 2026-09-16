@@ -57,7 +57,7 @@ export function Modal({ open, onClose, title, eyebrow, children, footer, size = 
           <motion.button
             type="button"
             aria-label="Close dialog"
-            className="absolute inset-0 bg-maroon-deep/55 backdrop-blur-[3px] sm:bg-maroon-deep/60 sm:backdrop-blur-none"
+            className="absolute inset-0 touch-none bg-maroon-deep/55 backdrop-blur-[3px] sm:bg-maroon-deep/60 sm:backdrop-blur-none"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -103,7 +103,7 @@ export function Modal({ open, onClose, title, eyebrow, children, footer, size = 
                 <X size={18} />
               </button>
             </div>
-            <div className="min-h-0 flex-1 overflow-y-auto px-6 py-5 text-sm leading-relaxed text-ink-soft">{children}</div>
+            <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-6 py-5 text-sm leading-relaxed text-ink-soft">{children}</div>
             {footer && <div className="border-t border-gold/20 bg-white px-6 py-4">{footer}</div>}
           </motion.div>
         </div>
