@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import { X } from 'lucide-react'
 import { useIsTablet, useReducedMotion, useScrollLock } from '@/hooks'
-import { spring } from '@/lib/motion'
+import { ease, spring } from '@/lib/motion'
 import { cn } from '@/lib/utils'
 
 /* ------------------------------------------------------------------
@@ -57,11 +57,11 @@ export function Modal({ open, onClose, title, eyebrow, children, footer, size = 
           <motion.button
             type="button"
             aria-label="Close dialog"
-            className="absolute inset-0 bg-maroon-deep/55 backdrop-blur-[3px]"
+            className="absolute inset-0 bg-maroon-deep/55 backdrop-blur-[3px] sm:bg-maroon-deep/60 sm:backdrop-blur-none"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.25 }}
+            transition={{ duration: 0.22 }}
             onClick={onClose}
           />
           <motion.div
@@ -70,15 +70,18 @@ export function Modal({ open, onClose, title, eyebrow, children, footer, size = 
             aria-modal="true"
             aria-labelledby={title ? 'tk-modal-title' : undefined}
             tabIndex={-1}
-            initial={reduced ? { opacity: 0 } : sheet ? { y: '100%', opacity: 1 } : { opacity: 0, y: 18, scale: 0.97 }}
-            animate={reduced ? { opacity: 1 } : sheet ? { y: 0, transition: spring.soft } : { opacity: 1, y: 0, scale: 1, transition: spring.soft }}
-            exit={reduced ? { opacity: 0 } : sheet ? { y: '100%', transition: { duration: 0.25 } } : { opacity: 0, y: 12, scale: 0.98, transition: { duration: 0.2 } }}
+            // phones: sheet slides up on a spring. larger screens: a short eased
+            // tween — springs overshoot on scale and read as a "pop", and the
+            // full-screen backdrop blur is skipped there so the frame stays cheap.
+            initial={reduced ? { opacity: 0 } : sheet ? { y: '100%', opacity: 1 } : { opacity: 0, y: 12, scale: 0.98 }}
+            animate={reduced ? { opacity: 1 } : sheet ? { y: 0, transition: spring.soft } : { opacity: 1, y: 0, scale: 1, transition: { duration: 0.3, ease: ease.luxe } }}
+            exit={reduced ? { opacity: 0 } : sheet ? { y: '100%', transition: { duration: 0.25 } } : { opacity: 0, y: 8, scale: 0.99, transition: { duration: 0.16, ease: ease.soft } }}
             className={cn(
               'relative z-10 flex max-h-[88dvh] w-full flex-col overflow-hidden bg-ivory shadow-lift outline-none',
               'rounded-t-[28px] sm:rounded-[28px]',
               sizes[size],
             )}
-            style={{ paddingBottom: sheet ? 'var(--safe-bottom)' : undefined }}
+            style={{ paddingBottom: sheet ? 'var(--safe-bottom)' : undefined, willChange: 'transform, opacity' }}
           >
             <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-gold-deep via-gold-light to-gold-deep" aria-hidden="true" />
             {sheet && <div className="mx-auto mt-3 h-1 w-10 rounded-full bg-maroon/15" aria-hidden="true" />}

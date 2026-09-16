@@ -130,10 +130,15 @@ export function useMockQuery<T>(loader: () => T, deps: unknown[], opts: MockQuer
 export function useScrollLock(locked: boolean) {
   useEffect(() => {
     if (!locked) return
-    const prev = document.body.style.overflow
-    document.body.style.overflow = 'hidden'
+    const body = document.body
+    const prev = { overflow: body.style.overflow, paddingRight: body.style.paddingRight }
+    // keep the page from jumping sideways when the desktop scrollbar disappears
+    const gutter = window.innerWidth - document.documentElement.clientWidth
+    body.style.overflow = 'hidden'
+    if (gutter > 0) body.style.paddingRight = `${gutter}px`
     return () => {
-      document.body.style.overflow = prev
+      body.style.overflow = prev.overflow
+      body.style.paddingRight = prev.paddingRight
     }
   }, [locked])
 }
