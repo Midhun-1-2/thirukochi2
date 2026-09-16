@@ -36,7 +36,8 @@ function StepRail({ pathname, className }: { pathname: string; className?: strin
           <li key={s.path} className="flex items-center gap-1.5 sm:gap-2">
             <span className="flex items-center gap-1.5">
               <span className={cn('block h-1.5 w-1.5 rounded-full transition-colors', active ? 'bg-gold-light shadow-[0_0_0_3px_rgba(249,223,146,0.25)]' : done ? 'bg-gold' : 'bg-cream/25')} aria-hidden="true" />
-              <span className={cn('whitespace-nowrap text-[10px] font-medium tracking-[0.14em] uppercase transition-colors', active ? 'text-gold-light' : done ? 'text-gold/80' : 'text-cream/40')}>{s.label}</span>
+              {/* under 400px only the current step keeps its label — the rest stay as dots so the rail never clips */}
+              <span className={cn('whitespace-nowrap text-[10px] font-medium tracking-[0.14em] uppercase transition-colors', active ? 'text-gold-light' : done ? 'hidden text-gold/80 xs:inline' : 'hidden text-cream/40 xs:inline')}>{s.label}</span>
             </span>
             {i < authSteps.length - 1 && <span className={cn('block h-px w-2.5 sm:w-7', done ? 'bg-gold/70' : 'bg-cream/15')} aria-hidden="true" />}
           </li>
@@ -134,12 +135,16 @@ export function AuthLayout() {
 
         {/* arch card */}
         {/* reserved height: cards of different sizes never move the stage or the statement */}
-        <div className="relative flex min-h-[min(660px,calc(100dvh_-_170px))] flex-col justify-center pt-2 lg:pt-4">
-          <TransitionDirection.Provider value={dir}>
-            <AnimatePresence mode="wait" initial={false} custom={dir}>
-              {outlet && cloneElement(outlet, { key: location.pathname })}
-            </AnimatePresence>
-          </TransitionDirection.Provider>
+        <div className="relative flex min-h-[min(660px,calc(100dvh_-_170px))] flex-col pt-2 lg:pt-4">
+          {/* auto margins centre the card but collapse to 0 when it is taller than the
+              slot (short phones), so it never climbs over the logo */}
+          <div className="my-auto w-full">
+            <TransitionDirection.Provider value={dir}>
+              <AnimatePresence mode="wait" initial={false} custom={dir}>
+                {outlet && cloneElement(outlet, { key: location.pathname })}
+              </AnimatePresence>
+            </TransitionDirection.Provider>
+          </div>
         </div>
 
         <StepRail pathname={location.pathname} className="justify-center md:hidden" />

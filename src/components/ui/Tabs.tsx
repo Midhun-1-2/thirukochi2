@@ -23,9 +23,11 @@ interface TabsProps<T extends string> {
   size?: 'sm' | 'md'
   /** Buttons share the width equally (no internal scroll). */
   stretch?: boolean
+  /** Pills flow onto extra rows instead of scrolling — for narrow phones with many options. */
+  wrap?: boolean
 }
 
-export function Tabs<T extends string>({ options, value, onChange, tone = 'light', className, ariaLabel, size = 'md', stretch = false }: TabsProps<T>) {
+export function Tabs<T extends string>({ options, value, onChange, tone = 'light', className, ariaLabel, size = 'md', stretch = false, wrap = false }: TabsProps<T>) {
   const id = useId()
   return (
     <div
@@ -34,6 +36,7 @@ export function Tabs<T extends string>({ options, value, onChange, tone = 'light
       className={cn(
         'hide-scrollbar inline-flex max-w-full items-center gap-1 overflow-x-auto rounded-full p-1',
         stretch && 'flex w-full',
+        wrap && 'flex w-full flex-wrap overflow-visible rounded-[22px]',
         tone === 'light' ? 'bg-sand/80 border border-gold/20' : 'bg-white/[0.06] border border-gold-light/15',
         className,
       )}

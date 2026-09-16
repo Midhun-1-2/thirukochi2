@@ -8,7 +8,7 @@ import { Tabs } from '@/components/ui/Tabs'
 import { EmptyState, ErrorState, Skeleton } from '@/components/ui/States'
 import { activity as allActivity } from '@/data/mock'
 import type { ActivityCategory } from '@/data/types'
-import { useDemoFlag, useDocumentTitle, useMockQuery } from '@/hooks'
+import { useDemoFlag, useDocumentTitle, useMediaQuery, useMockQuery } from '@/hooks'
 
 type Filter = 'all' | ActivityCategory
 
@@ -20,6 +20,8 @@ export function Activity() {
   const query = useMockQuery(() => (empty ? [] : allActivity), [empty], { fail })
   const items = useMemo(() => (query.data ?? []).filter((a) => filter === 'all' || a.category === filter), [query.data, filter])
 
+  /** Below 480px the four filters wrap onto a second row instead of scrolling behind a hidden scrollbar. */
+  const compact = !useMediaQuery('(min-width: 480px)')
   const options = [
     { value: 'all' as const, label: 'All', count: query.data?.length },
     { value: 'payments' as const, label: 'Payments' },
@@ -35,7 +37,7 @@ export function Activity() {
             <div className="pointer-events-none absolute -right-16 -top-20 h-56 w-56 rounded-full gold-glow opacity-60" aria-hidden="true" />
             <div className="relative flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
               <SectionHeading as="h1" eyebrow="Timeline" title="Activity" tone="dark" />
-              <Tabs options={options} value={filter} onChange={setFilter} tone="dark" size="sm" ariaLabel="Activity filters" />
+              <Tabs options={options} value={filter} onChange={setFilter} tone="dark" size="sm" ariaLabel="Activity filters" wrap={compact} />
             </div>
           </Card>
         </StaggerItem>

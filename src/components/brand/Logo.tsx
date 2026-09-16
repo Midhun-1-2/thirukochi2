@@ -14,14 +14,15 @@ interface LogoProps {
   priority?: boolean
   /** Adds a slow light sweep masked to the logo artwork. */
   shine?: boolean
-  /** `sync` paints the logo in the same frame it loads — for above-the-fold slots where a late async decode would leave a blank. */
+  /** `sync` paints the logo in the same frame it loads. Defaults to sync for `priority` logos — a deferred async decode
+   *  can leave an above-the-fold slot blank on phones. */
   decode?: 'async' | 'sync'
 }
 
 const FULL_RATIO = 1115 / 2262 // h / w of the lockup
 const EMBLEM_RATIO = 1
 
-export function Logo({ variant = 'full', className, width, priority = false, shine = false, decode = 'async' }: LogoProps) {
+export function Logo({ variant = 'full', className, width, priority = false, shine = false, decode = priority ? 'sync' : 'async' }: LogoProps) {
   if (variant === 'emblem') {
     const w = width ?? 44
     return (

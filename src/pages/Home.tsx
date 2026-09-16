@@ -56,7 +56,8 @@ export function Home() {
 
         <div className="grid gap-5 md:grid-cols-12 md:gap-6 lg:gap-7">
           {/* ---------- primary column ---------- */}
-          <div className="space-y-5 md:col-span-7 md:space-y-6 lg:col-span-8 lg:space-y-7">
+          {/* min-w-0: grid tracks otherwise grow to the widest nowrap child (activity titles) and push past narrow phones */}
+          <div className="min-w-0 space-y-5 md:col-span-7 md:space-y-6 lg:col-span-8 lg:space-y-7">
             <UnfoldReveal delay={0.15} duration={1}>
               <GoldRateCard data={rates.data} status={rates.status} onRetry={rates.retry} />
             </UnfoldReveal>
@@ -113,7 +114,7 @@ export function Home() {
           </div>
 
           {/* ---------- side column (desktop) ---------- */}
-          <aside className="hidden space-y-5 md:col-span-5 md:block lg:col-span-4 lg:space-y-6">
+          <aside className="hidden min-w-0 space-y-5 md:col-span-5 md:block lg:col-span-4 lg:space-y-6">
             <UnfoldReveal delay={0.35}>
               <ReferralCard code={user?.referenceCode ?? 'TKGD123'} />
             </UnfoldReveal>
