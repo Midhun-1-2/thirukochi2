@@ -178,11 +178,12 @@ export function GoldRateCard({ data, status, onRetry, className, compact = false
   return (
     <Card tone="white" radius="xl" padding="none" className={cn('card-sheen', className)}>
       {/* masthead */}
-      <div className="relative flex h-11 items-center justify-between overflow-hidden maroon-surface px-5 sm:px-6">
+      {/* Every label stays on one unbroken line; on narrow phones the clock + badge drop to a second row instead. */}
+      <div className="relative flex min-h-11 flex-wrap items-center justify-between gap-x-4 gap-y-1.5 overflow-hidden maroon-surface px-5 py-2 sm:px-6">
         <div className="pointer-events-none absolute -right-10 -top-10 h-28 w-28 rounded-full gold-glow opacity-70" aria-hidden="true" />
-        <p className="eyebrow relative text-gold-light">Today&apos;s Gold Rate</p>
-        <div className="relative flex items-center gap-3 text-[11px] text-cream/70">
-          <time dateTime={now.toISOString()} className="hidden xs:inline">
+        <p className="relative whitespace-nowrap text-[12px] font-medium tracking-[0.16em] text-gold-light uppercase">Today&apos;s Gold Rate</p>
+        <div className="relative ml-auto flex items-center gap-3 whitespace-nowrap text-[12px] text-cream/80">
+          <time dateTime={now.toISOString()}>
             {now.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })} ·{' '}
             {/* Poppins has no tabular figures — reserve the widest digit so the ticking clock never nudges the badge */}
             <span className="inline-grid">
