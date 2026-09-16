@@ -3,6 +3,7 @@ import { motion } from 'framer-motion'
 import { Link, useNavigate } from 'react-router-dom'
 import { Eye, EyeOff, KeyRound, Phone, RefreshCw, ShieldCheck } from 'lucide-react'
 import { AuthCard } from '@/components/auth/AuthCard'
+import { WELCOME_FLAG } from '@/components/motion/WelcomeVeil'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { useAuth } from '@/context/AuthContext'
@@ -87,9 +88,20 @@ export function Login() {
     setFormError(null)
     if (!valid) return
     setLoading(true)
+    // raised before the guard can redirect us; the shell consumes it on mount
+    try {
+      sessionStorage.setItem(WELCOME_FLAG, '1')
+    } catch {
+      /* private mode — no welcome veil, sign-in still works */
+    }
     const result = await login(phone, mpin)
     setLoading(false)
     if (!result.ok) {
+      try {
+        sessionStorage.removeItem(WELCOME_FLAG)
+      } catch {
+        /* ignore */
+      }
       setFormError(result.error)
       setMpin('')
       refreshCaptcha()
@@ -97,7 +109,7 @@ export function Login() {
     }
     setSuccess(true)
     toast('Welcome back', { description: 'Signed in securely.', tone: 'success' })
-    window.setTimeout(() => navigate('/home'), 600)
+    window.setTimeout(() => navigate('/home', { replace: true }), 600)
   }
 
   return (

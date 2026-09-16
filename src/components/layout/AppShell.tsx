@@ -1,4 +1,4 @@
-import { cloneElement, useEffect, useState } from 'react'
+import { cloneElement, useCallback, useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Link, NavLink, useLocation, useNavigate, useOutlet } from 'react-router-dom'
 import { Bell, LogOut, ChevronRight } from 'lucide-react'
@@ -7,6 +7,7 @@ import { BangleArt } from '@/components/brand/JewelArt'
 import { Logo } from '@/components/brand/Logo'
 import { GoldParticles } from '@/components/motion/GoldParticles'
 import { SplitText } from '@/components/motion/Signature'
+import { WELCOME_FLAG, WelcomeVeil } from '@/components/motion/WelcomeVeil'
 import { Avatar, IconButton, LiveBadge } from '@/components/ui/Basics'
 import { Modal } from '@/components/ui/Modal'
 import { useAuth } from '@/context/AuthContext'
@@ -61,7 +62,7 @@ function NotificationsModal({ open, onClose }: { open: boolean; onClose: () => v
 }
 
 /* ---------- Desktop sidebar ---------- */
-function DesktopSidebar() {
+function DesktopSidebar({ entrance = false }: { entrance?: boolean }) {
   const { user, logout } = useAuth()
   const navigate = useNavigate()
   const location = useLocation()
@@ -69,7 +70,12 @@ function DesktopSidebar() {
   const reduced = useReducedMotion()
 
   return (
-    <aside className="fixed inset-y-0 left-0 z-30 hidden w-[264px] flex-col maroon-surface grain text-cream lg:flex">
+    <motion.aside
+      className="fixed inset-y-0 left-0 z-30 hidden w-[264px] flex-col maroon-surface grain text-cream lg:flex"
+      initial={entrance && !reduced ? { x: -48, opacity: 0 } : false}
+      animate={{ x: 0, opacity: 1 }}
+      transition={{ ...spring.soft, delay: 0.2 }}
+    >
       <div className="px-7 pb-6 pt-8">
         <Link to="/home" aria-label="Thirukochi home" className="block">
           <Logo width={168} priority shine />
@@ -136,17 +142,22 @@ function DesktopSidebar() {
           </button>
         </div>
       </div>
-    </aside>
+    </motion.aside>
   )
 }
 
 /* ---------- Tablet top bar ---------- */
-function TabletTopBar({ onBell, unread }: { onBell: () => void; unread: number }) {
+function TabletTopBar({ onBell, unread, entrance = false }: { onBell: () => void; unread: number; entrance?: boolean }) {
   const location = useLocation()
   const { user } = useAuth()
   const reduced = useReducedMotion()
   return (
-    <header className="sticky top-0 z-30 hidden maroon-surface text-cream md:block lg:hidden">
+    <motion.header
+      className="sticky top-0 z-30 hidden maroon-surface text-cream md:block lg:hidden"
+      initial={entrance && !reduced ? { y: -40, opacity: 0 } : false}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ ...spring.soft, delay: 0.2 }}
+    >
       <div className="mx-auto flex h-[68px] max-w-[1200px] items-center justify-between gap-6 px-[var(--page-x)]">
         <Link to="/home" aria-label="Thirukochi home" className="shrink-0">
           <Logo width={132} priority />
@@ -184,12 +195,12 @@ function TabletTopBar({ onBell, unread }: { onBell: () => void; unread: number }
           </Link>
         </div>
       </div>
-    </header>
+    </motion.header>
   )
 }
 
 /* ---------- Mobile header ---------- */
-function MobileHeader({ onBell, unread }: { onBell: () => void; unread: number }) {
+function MobileHeader({ onBell, unread, entrance = false }: { onBell: () => void; unread: number; entrance?: boolean }) {
   const location = useLocation()
   const { user } = useAuth()
   const reduced = useReducedMotion()
@@ -216,13 +227,15 @@ function MobileHeader({ onBell, unread }: { onBell: () => void; unread: number }
           <IconButton label="Notifications" tone="dark" size="sm" onClick={onBell} badge={unread > 0} className="mt-4 bg-maroon-deep/80 backdrop-blur-sm">
             <Bell size={17} strokeWidth={1.8} />
           </IconButton>
-          <Link
-            to="/home"
-            aria-label="Thirukochi home"
-            className="pendant-tile flex rounded-b-[26px] border border-t-0 border-gold/70 px-4 pb-2.5 pt-2"
-          >
-            <Logo width={104} priority shine decode="sync" />
-          </Link>
+          <motion.div initial={entrance && !reduced ? { y: -96 } : false} animate={{ y: 0 }} transition={{ ...spring.soft, delay: 0.25 }}>
+            <Link
+              to="/home"
+              aria-label="Thirukochi home"
+              className="pendant-tile flex rounded-b-[26px] border border-t-0 border-gold/70 px-4 pb-2.5 pt-2"
+            >
+              <Logo width={104} priority shine decode="sync" />
+            </Link>
+          </motion.div>
           {/* same footprint as the bell so the pendant sits dead centre */}
           <div className="mt-4 flex h-10 w-10 items-center justify-end">
             <Link to="/profile" aria-label="Profile" className="rounded-full shadow-[0_0_0_3px_rgba(212,175,55,0.22)]">
@@ -262,7 +275,7 @@ function MobileHeader({ onBell, unread }: { onBell: () => void; unread: number }
 }
 
 /* ---------- Mobile bottom nav ---------- */
-function BottomNav() {
+function BottomNav({ entrance = false }: { entrance?: boolean }) {
   const location = useLocation()
   const reduced = useReducedMotion()
   return (
@@ -271,7 +284,12 @@ function BottomNav() {
       className="fixed inset-x-3 z-40 md:hidden"
       style={{ bottom: 'calc(var(--safe-bottom) + 10px)' }}
     >
-      <ul className="relative flex items-end justify-between overflow-visible rounded-[28px] border border-gold-light/20 maroon-surface px-1.5 pb-1.5 pt-1 shadow-maroon">
+      <motion.ul
+        className="relative flex items-end justify-between overflow-visible rounded-[28px] border border-gold-light/20 maroon-surface px-1.5 pb-1.5 pt-1 shadow-maroon"
+        initial={entrance && !reduced ? { y: 96, opacity: 0 } : false}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ ...spring.soft, delay: 0.3 }}
+      >
         <span className="pointer-events-none absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-gold-light/60 to-transparent" aria-hidden="true" />
         {primaryNav.map((item) => {
           const active = isNavActive(item, location.pathname)
@@ -308,7 +326,7 @@ function BottomNav() {
             </li>
           )
         })}
-      </ul>
+      </motion.ul>
     </nav>
   )
 }
@@ -352,7 +370,25 @@ export function AppShell() {
   const outlet = useOutlet()
   const isDesktop = useIsDesktop()
   const isTablet = useIsTablet()
+  const { user } = useAuth()
   const { open, setOpen, unread } = useNotifications()
+
+  // Sign-in raises WELCOME_FLAG. The veil greets the member, then lifts; the
+  // shell and page mount only as it lifts so their own entrances play in the
+  // reveal. 'veil' → 'lift' → null. The flag is consumed here so a refresh
+  // never replays it.
+  const [welcome, setWelcome] = useState<'veil' | 'lift' | null>(() => {
+    try {
+      if (!sessionStorage.getItem(WELCOME_FLAG)) return null
+      sessionStorage.removeItem(WELCOME_FLAG)
+      return 'veil'
+    } catch {
+      return null
+    }
+  })
+  const lift = useCallback(() => setWelcome('lift'), [])
+  const held = welcome === 'veil'
+  const entrance = welcome === 'lift'
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior })
@@ -360,21 +396,25 @@ export function AppShell() {
 
   return (
     <div className="min-h-dvh bg-cream">
-      {isDesktop && <DesktopSidebar />}
-      {isTablet && !isDesktop && <TabletTopBar onBell={() => setOpen(true)} unread={unread} />}
-      {!isTablet && <MobileHeader onBell={() => setOpen(true)} unread={unread} />}
+      <AnimatePresence onExitComplete={() => setWelcome(null)}>
+        {held && <WelcomeVeil name={(user?.name ?? 'Member').split(' ')[0]} onLift={lift} />}
+      </AnimatePresence>
+
+      {!held && isDesktop && <DesktopSidebar entrance={entrance} />}
+      {!held && isTablet && !isDesktop && <TabletTopBar onBell={() => setOpen(true)} unread={unread} entrance={entrance} />}
+      {!held && !isTablet && <MobileHeader onBell={() => setOpen(true)} unread={unread} entrance={entrance} />}
 
       <div className={cn('relative', isDesktop && 'pl-[264px]')}>
         <div className="pointer-events-none absolute right-0 top-0 hidden h-[420px] w-[420px] rounded-full gold-glow opacity-40 lg:block" aria-hidden="true" />
         <main className="relative mx-auto w-full max-w-[1200px] px-[var(--page-x)] pb-[calc(var(--safe-bottom)+6.5rem)] md:pb-14">
-          <DesktopHeader onBell={() => setOpen(true)} unread={unread} />
+          {!held && <DesktopHeader onBell={() => setOpen(true)} unread={unread} />}
           <AnimatePresence mode="wait" initial={false}>
-            {outlet && cloneElement(outlet, { key: location.pathname })}
+            {!held && outlet && cloneElement(outlet, { key: location.pathname })}
           </AnimatePresence>
         </main>
       </div>
 
-      {!isTablet && <BottomNav />}
+      {!held && !isTablet && <BottomNav entrance={entrance} />}
       <NotificationsModal open={open} onClose={() => setOpen(false)} />
     </div>
   )

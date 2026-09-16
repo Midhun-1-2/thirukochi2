@@ -34,7 +34,7 @@ export function Logo({ variant = 'full', className, width, priority = false, shi
         className={cn('h-auto select-none', className)}
         draggable={false}
         loading={priority ? 'eager' : 'lazy'}
-        decoding="async"
+        decoding={decode}
       />
     )
   }
