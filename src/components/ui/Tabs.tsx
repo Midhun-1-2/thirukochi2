@@ -54,6 +54,8 @@ export function Tabs<T extends string>({ options, value, onChange, tone = 'light
               'relative shrink-0 rounded-full font-medium transition-colors duration-300 whitespace-nowrap',
               size === 'sm' ? 'h-8 px-3.5 text-xs' : 'h-10 px-4 text-[13px]',
               stretch && 'min-w-0 flex-1 px-2',
+              // two pills per row so the rows stay balanced instead of one orphan on the last line
+              wrap && 'min-w-0 flex-[1_0_40%] px-2',
               active
                 ? tone === 'light' ? 'text-gold-light' : 'text-maroon-deep'
                 : tone === 'light' ? 'text-ink-soft hover:text-maroon' : 'text-cream/75 hover:text-cream',

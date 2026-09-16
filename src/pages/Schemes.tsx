@@ -31,6 +31,8 @@ export function Schemes() {
   const isDesktop = useIsDesktop()
   /** Vitrine grid needs ~300px per card; below that the index rows keep the page short. */
   const wide = useMediaQuery('(min-width: 1280px)')
+  /** Under 360px the three filters cannot share one row without clipping — let them wrap. */
+  const narrow = !useMediaQuery('(min-width: 360px)')
   const reduced = useReducedMotion()
   const visible = (query.data ?? []).filter((s) => filter === 'all' || s.category === filter)
 
@@ -62,7 +64,7 @@ export function Schemes() {
 
         <StaggerItem className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
           <SectionHeading eyebrow="Discover" title="Choose a scheme" className="hidden xl:block" />
-          <Tabs options={filters} value={filter} onChange={setFilter} ariaLabel="Scheme categories" stretch={!wide} />
+          <Tabs options={filters} value={filter} onChange={setFilter} ariaLabel="Scheme categories" stretch={!wide && !narrow} wrap={narrow} />
         </StaggerItem>
 
         <StaggerItem>
