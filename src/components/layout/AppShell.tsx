@@ -315,7 +315,8 @@ function BottomNav({ entrance = false }: { entrance?: boolean }) {
                   )}
                   <motion.span
                     className={cn('relative z-10', active && 'text-maroon-deep')}
-                    animate={active ? { y: -12, scale: 1.05 } : { y: 0, scale: 1 }}
+                    // disc sits 12px above the 36px slot (centre at -8 from the icon's rest centre)
+                    animate={active ? { y: -8, scale: 1.05 } : { y: 0, scale: 1 }}
                     transition={reduced ? { duration: 0 } : spring.snappy}
                   >
                     <item.icon size={20} strokeWidth={active ? 2 : 1.7} />
