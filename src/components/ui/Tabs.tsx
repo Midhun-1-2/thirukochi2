@@ -52,8 +52,11 @@ export function Tabs<T extends string>({ options, value, onChange, tone = 'light
             onClick={() => onChange(opt.value)}
             className={cn(
               'relative shrink-0 rounded-full font-medium transition-colors duration-300 whitespace-nowrap',
-              size === 'xs' ? 'h-8 px-2.5 text-[11px]' : size === 'sm' ? 'h-8 px-3.5 text-xs' : 'h-10 px-4 text-[13px]',
-              stretch && (size === 'xs' ? 'min-w-0 flex-1 px-1' : 'min-w-0 flex-1 px-2'),
+              size === 'xs' ? 'h-8 text-[10.5px]' : size === 'sm' ? 'h-8 text-xs' : 'h-10 text-[13px]',
+              // padding: one source only, so stretch can tighten it
+              stretch ? (size === 'xs' ? 'px-1' : 'px-2') : size === 'xs' ? 'px-2.5' : size === 'sm' ? 'px-3.5' : 'px-4',
+              // xs shares space by label width (flex-auto) so short labels do not starve long ones
+              stretch && (size === 'xs' ? 'min-w-0 flex-auto' : 'min-w-0 flex-1'),
               // two pills per row so the rows stay balanced instead of one orphan on the last line
               wrap && 'min-w-0 flex-[1_0_40%] px-2',
               active

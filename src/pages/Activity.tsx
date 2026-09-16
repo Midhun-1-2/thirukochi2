@@ -25,7 +25,8 @@ export function Activity() {
   const tiny = !useMediaQuery('(min-width: 400px)')
   const stacked = !useMediaQuery('(min-width: 640px)')
   const options = [
-    { value: 'all' as const, label: 'All', count: query.data?.length },
+    // the count badge is dropped on tiny screens so all four labels fit one row
+    { value: 'all' as const, label: 'All', count: tiny ? undefined : query.data?.length },
     { value: 'payments' as const, label: 'Payments' },
     { value: 'schemes' as const, label: 'Schemes' },
     { value: 'rate' as const, label: 'Gold Rate' },
