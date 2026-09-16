@@ -7,7 +7,7 @@ import { Card } from '@/components/ui/Card'
 import { ErrorState, Skeleton } from '@/components/ui/States'
 import type { GoldRate, GoldRateData } from '@/data/types'
 import { useReducedMotion } from '@/hooks'
-import { formatDate, formatINR, formatNumberIN } from '@/lib/format'
+import { formatINR, formatNumberIN } from '@/lib/format'
 import { ease, spring } from '@/lib/motion'
 import { cn } from '@/lib/utils'
 
@@ -119,9 +119,27 @@ interface GoldRateCardProps {
 
 const ROTATE_MS = 4500
 
+/** Wall clock for the masthead — ticks once a second while the tab is visible. */
+function useNow(stepMs = 1000) {
+  const [now, setNow] = useState(() => new Date())
+  useEffect(() => {
+    const tick = () => setNow(new Date())
+    const id = window.setInterval(() => {
+      if (!document.hidden) tick()
+    }, stepMs)
+    document.addEventListener('visibilitychange', tick)
+    return () => {
+      window.clearInterval(id)
+      document.removeEventListener('visibilitychange', tick)
+    }
+  }, [stepMs])
+  return now
+}
+
 export function GoldRateCard({ data, status, onRetry, className, compact = false }: GoldRateCardProps) {
   const [selectedId, setSelectedId] = useState<string>('1g-22k')
   const reduced = useReducedMotion()
+  const now = useNow()
   const rate = data?.rates.find((r) => r.id === selectedId) ?? data?.rates[0]
 
   // Auto-rotate through the rates. A manual pick simply restarts the timer
@@ -155,7 +173,7 @@ export function GoldRateCard({ data, status, onRetry, className, compact = false
   const widestPrice = data.rates.map((r) => formatNumberIN(r.price, 2)).reduce((a, b) => (b.length > a.length ? b : a), '')
   const lo = Math.min(...rate.history)
   const hi = Math.max(...rate.history)
-  const updated = new Date(data.updatedAt).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })
+  const clock = now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit' })
 
   return (
     <Card tone="white" radius="xl" padding="none" className={cn('card-sheen', className)}>
@@ -164,7 +182,16 @@ export function GoldRateCard({ data, status, onRetry, className, compact = false
         <div className="pointer-events-none absolute -right-10 -top-10 h-28 w-28 rounded-full gold-glow opacity-70" aria-hidden="true" />
         <p className="eyebrow relative text-gold-light">Today&apos;s Gold Rate</p>
         <div className="relative flex items-center gap-3 text-[11px] text-cream/70">
-          <span className="hidden xs:inline">{formatDate(data.date)} · {updated}</span>
+          <time dateTime={now.toISOString()} className="hidden xs:inline">
+            {now.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })} ·{' '}
+            {/* Poppins has no tabular figures — reserve the widest digit so the ticking clock never nudges the badge */}
+            <span className="inline-grid">
+              <span className="invisible [grid-area:1/1]" aria-hidden="true">
+                {clock.replace(/\d/g, '6')}
+              </span>
+              <span className="[grid-area:1/1]">{clock}</span>
+            </span>
+          </time>
           {data.live && <LiveBadge />}
         </div>
       </div>
