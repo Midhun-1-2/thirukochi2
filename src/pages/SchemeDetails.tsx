@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { ArrowRight, Pencil, ShieldCheck } from 'lucide-react'
 import { SchemeArtwork } from '@/components/brand/JewelArt'
@@ -10,7 +9,7 @@ import { Card } from '@/components/ui/Card'
 import { EmptyState } from '@/components/ui/States'
 import { useSchemes } from '@/context/SchemeContext'
 import { useToast } from '@/context/ToastContext'
-import { getPaymentMethod, getScheme } from '@/data/mock'
+import { getScheme } from '@/data/mock'
 import type { SchemeSelection } from '@/data/types'
 import { useDocumentTitle } from '@/hooks'
 import { formatINR } from '@/lib/format'
@@ -20,9 +19,8 @@ export function SchemeDetails() {
   const scheme = getScheme(id)
   useDocumentTitle(scheme?.name ?? 'Scheme')
   const navigate = useNavigate()
-  const { draft, updateDraft, confirmDraft } = useSchemes()
+  const { draft, updateDraft } = useSchemes()
   const { toast } = useToast()
-  const [loading, setLoading] = useState(false)
 
   if (!scheme) {
     return (
@@ -41,14 +39,12 @@ export function SchemeDetails() {
     draft.schemeId === scheme.id
       ? draft
       : { schemeId: scheme.id, amount: scheme.presetAmounts[1] ?? scheme.minAmount, paymentMethodId: 'upi' }
-  const method = getPaymentMethod(selection.paymentMethodId)
 
-  const proceed = async () => {
-    setLoading(true)
+  // Joining always asks how the member will pay — carry this selection into
+  // the join flow and land on its Payment step.
+  const proceed = () => {
     updateDraft(selection)
-    await confirmDraft()
-    setLoading(false)
-    navigate('/success')
+    navigate(`/join-scheme?scheme=${scheme.id}&step=2`)
   }
 
   return (
@@ -107,19 +103,19 @@ export function SchemeDetails() {
 
           <div className="space-y-4 lg:col-span-5">
             <StaggerItem>
-              <SchemeSummary scheme={scheme} selection={selection} method={method} />
+              <SchemeSummary scheme={scheme} selection={selection} />
             </StaggerItem>
             <StaggerItem className="grid grid-cols-2 gap-3">
               <Button variant="outline" size="lg" leading={<Pencil size={15} />} onClick={() => navigate(`/join-scheme?scheme=${scheme.id}`)}>
                 Edit Details
               </Button>
-              <Button size="lg" magnetic loading={loading} loadingText="Activating" trailing={<ArrowRight size={16} />} onClick={proceed}>
+              <Button size="lg" magnetic trailing={<ArrowRight size={16} />} onClick={proceed}>
                 Proceed
               </Button>
             </StaggerItem>
             <StaggerItem>
               <p className="text-center text-xs text-ink-mute">
-                Proceeding activates the scheme with the summary above.{' '}
+                Next you choose a payment method, then review before joining.{' '}
                 <button type="button" className="text-maroon underline-offset-4 hover:underline" onClick={() => toast('Need help?', { description: 'Visit any Thirukochi showroom or call our care line.', tone: 'info' })}>
                   Need help?
                 </button>

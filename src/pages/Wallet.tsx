@@ -63,7 +63,7 @@ function ShareModal({ open, onClose, code }: { open: boolean; onClose: () => voi
     >
       <p>Every friend who joins a scheme with this code earns you {formatINR(wallet.bonusPerReferral, { decimals: false })}.</p>
       <div className="mt-4 flex items-center justify-between gap-3 rounded-2xl border border-gold/40 bg-cream px-4 py-3">
-        <span className="font-display text-2xl tracking-[0.12em] text-maroon">{code}</span>
+        <span className="font-figures text-2xl font-semibold tracking-[0.08em] text-maroon tabular">{code}</span>
         <button
           type="button"
           onClick={async () => {
@@ -189,7 +189,7 @@ export function Wallet() {
                         {formatINR(data.bonusPerReferral, { decimals: false })} per referral
                       </Badge>
                     </div>
-                    <p className="mt-3 font-display text-[clamp(2.4rem,6vw,3.6rem)] leading-none gold-text tabular">
+                    <p className="mt-3 font-figures text-[clamp(2.4rem,6vw,3.6rem)] font-semibold leading-none gold-text tabular">
                       <span className="mr-1 align-top text-[0.5em]">₹</span>
                       <RollingNumber value={data.balance} format={(n) => n.toLocaleString('en-IN')} delay={0.2} />
                     </p>
@@ -227,7 +227,7 @@ export function Wallet() {
               <Card tone="cream" padding="sm" className="flex items-center justify-between gap-3">
                 <div className="min-w-0">
                   <p className="eyebrow text-gold-deep">Reference code</p>
-                  <p className="mt-0.5 font-display text-xl tracking-[0.1em] text-maroon">
+                  <p className="mt-0.5 font-figures text-xl font-semibold tracking-[0.06em] text-maroon tabular">
                     <TypeIn text={code} delay={0.9} speed={0.09} />
                   </p>
                 </div>

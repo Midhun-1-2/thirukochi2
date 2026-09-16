@@ -188,11 +188,12 @@ interface SummaryProps {
 
 export function SchemeSummary({ scheme, selection, method, editHref, onEditStep, className, showBenefits = true }: SummaryProps) {
   const total = selection.amount * scheme.tenure
-  const rows: Array<{ label: string; value: string; step?: number }> = [
+  const rows: Array<{ label: string; value: string; step?: number; pending?: boolean }> = [
     { label: 'Scheme Name', value: scheme.name, step: 0 },
     { label: 'Monthly Amount', value: formatINR(selection.amount, { decimals: false }), step: 1 },
     { label: 'Tenure', value: `${scheme.tenure} Months` },
-    { label: 'Payment Method', value: method?.label ?? '—', step: 2 },
+    // no method yet means it is picked on the next step, not a missing value
+    method ? { label: 'Payment Method', value: method.label, step: 2 } : { label: 'Payment Method', value: 'Choose after Proceed', pending: true },
   ]
   return (
     <Card tone="white" radius="xl" padding="none" className={className}>
@@ -209,7 +210,7 @@ export function SchemeSummary({ scheme, selection, method, editHref, onEditStep,
         {rows.map((row) => (
           <div key={row.label} className="flex items-center justify-between gap-4 py-3.5">
             <dt className="text-[13px] text-ink-soft">{row.label}</dt>
-            <dd className="flex items-center gap-2 text-right text-sm font-medium text-maroon tabular">
+            <dd className={cn('flex items-center gap-2 text-right text-sm tabular', row.pending ? 'italic text-ink-soft' : 'font-medium text-maroon')}>
               {row.value}
               {onEditStep && row.step !== undefined ? (
                 <button type="button" onClick={() => onEditStep(row.step!)} aria-label={`Edit ${row.label}`} className="flex h-8 w-8 items-center justify-center rounded-full text-ink-mute transition hover:bg-maroon-tint hover:text-maroon">
@@ -223,7 +224,7 @@ export function SchemeSummary({ scheme, selection, method, editHref, onEditStep,
         ))}
         <div className="flex items-center justify-between gap-4 py-3.5">
           <dt className="text-[13px] text-ink-soft">Monthly Instalment</dt>
-          <dd className="font-display text-xl text-maroon tabular">{formatINR(selection.amount, { decimals: false })}</dd>
+          <dd className="font-figures text-xl font-semibold text-maroon tabular">{formatINR(selection.amount, { decimals: false })}</dd>
         </div>
       </dl>
       {showBenefits && (

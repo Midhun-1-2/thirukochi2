@@ -22,7 +22,20 @@ const STEPS = ['Scheme', 'Amount', 'Payment', 'Review']
 
 const methodIcons: Record<string, LucideIcon> = { upi: Smartphone, bank: Building2, card: CreditCard, auto: RefreshCcw }
 
-function OptionCard({ selected, onSelect, children, className }: { selected: boolean; onSelect: () => void; children: React.ReactNode; className?: string }) {
+function OptionCard({
+  selected,
+  onSelect,
+  children,
+  className,
+  check = 'top',
+}: {
+  selected: boolean
+  onSelect: () => void
+  children: React.ReactNode
+  className?: string
+  /** Tick pinned to the corner for tall cards, centred on single-row cards. */
+  check?: 'top' | 'center'
+}) {
   return (
     <button
       type="button"
@@ -38,7 +51,8 @@ function OptionCard({ selected, onSelect, children, className }: { selected: boo
       {children}
       <span
         className={cn(
-          'absolute right-4 top-4 flex h-6 w-6 items-center justify-center rounded-full border transition-all duration-300',
+          'absolute right-4 flex h-6 w-6 items-center justify-center rounded-full border transition-all duration-300',
+          check === 'center' ? 'top-1/2 -translate-y-1/2' : 'top-4',
           selected ? 'border-transparent bg-maroon text-gold-light' : 'border-maroon/20 bg-white text-transparent',
         )}
         aria-hidden="true"
@@ -211,7 +225,7 @@ export function JoinScheme() {
                   <Card tone="cream" padding="sm" className="mt-4 grid gap-3 text-sm sm:grid-cols-3">
                     <div>
                       <p className="text-xs text-ink-mute">You will save</p>
-                      <p className="mt-0.5 font-display text-xl text-maroon tabular">
+                      <p className="mt-0.5 font-figures text-xl font-semibold text-maroon tabular">
                         {formatINR(draft.amount, { decimals: false })}
                         <span className="ml-1 font-body text-sm text-ink-mute">/ month</span>
                       </p>
@@ -238,7 +252,7 @@ export function JoinScheme() {
                     {paymentMethods.map((m) => {
                       const Icon = methodIcons[m.icon] ?? Banknote
                       return (
-                        <OptionCard key={m.id} selected={draft.paymentMethodId === m.id} onSelect={() => updateDraft({ paymentMethodId: m.id })}>
+                        <OptionCard key={m.id} check="center" selected={draft.paymentMethodId === m.id} onSelect={() => updateDraft({ paymentMethodId: m.id })}>
                           <div className="flex items-center gap-3 pr-8">
                             <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-maroon text-gold-light">
                               <Icon size={19} strokeWidth={1.8} aria-hidden="true" />

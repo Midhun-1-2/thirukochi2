@@ -74,9 +74,9 @@ export function Success() {
                   <span className="whitespace-nowrap text-[11px] tracking-wider text-gold-light/70 tabular">{lastJoined.referenceNo}</span>
                 </div>
                 <div className="mt-3 flex items-center justify-center gap-3">
-                  <span className="font-display text-2xl gold-text tabular">{formatINR(lastJoined.amount, { decimals: false })}</span>
+                  <span className="font-figures text-2xl font-semibold gold-text tabular">{formatINR(lastJoined.amount, { decimals: false })}</span>
                   <span className="h-6 w-px bg-gold-light/30" aria-hidden="true" />
-                  <span className="font-display text-2xl text-cream tabular">{scheme.tenure} Months</span>
+                  <span className="font-figures text-2xl font-semibold text-cream tabular">{scheme.tenure} Months</span>
                 </div>
                 <dl className="mt-4 grid grid-cols-2 gap-2 border-t border-gold-light/15 pt-3 text-left text-xs">
                   <div>
