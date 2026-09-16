@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import { AnimatePresence, motion } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import { Lock, ShieldCheck } from 'lucide-react'
 import { AuthCard } from '@/components/auth/AuthCard'
@@ -9,7 +8,6 @@ import { useAuth } from '@/context/AuthContext'
 import { useToast } from '@/context/ToastContext'
 import { useDocumentTitle } from '@/hooks'
 import { authConfig } from '@/data/mock'
-import { spring } from '@/lib/motion'
 
 export function SetMpin() {
   useDocumentTitle('Set MPIN')
@@ -17,6 +15,7 @@ export function SetMpin() {
   const { pending, setMpin, isAuthenticated } = useAuth()
   const { toast } = useToast()
   const [phase, setPhase] = useState<'create' | 'confirm'>('create')
+  const [dir, setDir] = useState<1 | -1>(1)
   const [first, setFirst] = useState('')
   const [second, setSecond] = useState('')
   const [error, setError] = useState<string | null>(null)
@@ -38,7 +37,11 @@ export function SetMpin() {
         return
       }
       setError(null)
-      window.setTimeout(() => setPhase('confirm'), 220)
+      // let the gold lock wave finish before sliding to confirm
+      window.setTimeout(() => {
+        setDir(1)
+        setPhase('confirm')
+      }, 650)
     }
   }
 
@@ -74,28 +77,23 @@ export function SetMpin() {
       }
     >
       <div className="space-y-3">
-        <AnimatePresence mode="wait" initial={false}>
-          <motion.p
-            key={phase}
-            initial={{ opacity: 0, y: 6 }}
-            animate={{ opacity: 1, y: 0, transition: spring.soft }}
-            exit={{ opacity: 0, y: -6, transition: { duration: 0.15 } }}
-            className="text-center text-sm font-medium text-maroon"
-          >
-            {phase === 'create' ? 'Enter a new MPIN' : 'Re-enter your MPIN to confirm'}
-          </motion.p>
-        </AnimatePresence>
-
         <MPINInput
-          key={phase}
           value={value}
           onChange={(v) => {
             setError(null)
             setValue(v)
           }}
           onComplete={handleComplete}
+          onEnter={phase === 'confirm' ? submit : undefined}
           error={Boolean(error)}
           disabled={loading || success}
+          transitionKey={phase}
+          direction={dir}
+          header={
+            <p className="text-center text-sm font-medium text-maroon">
+              {phase === 'create' ? 'Enter a new MPIN' : 'Re-enter your MPIN to confirm'}
+            </p>
+          }
         />
 
         <div className="min-h-[16px] text-center" aria-live="polite">
@@ -120,6 +118,7 @@ export function SetMpin() {
           <button
             type="button"
             onClick={() => {
+              setDir(-1)
               setPhase('create')
               setFirst('')
               setSecond('')
