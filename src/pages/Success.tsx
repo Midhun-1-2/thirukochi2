@@ -76,7 +76,7 @@ export function Success() {
                 <div className="mt-3 flex items-center justify-center gap-3">
                   <span className="font-display text-2xl gold-text tabular">{formatINR(lastJoined.amount, { decimals: false })}</span>
                   <span className="h-6 w-px bg-gold-light/30" aria-hidden="true" />
-                  <span className="font-display text-2xl text-cream tabular">{lastJoined.tenure} Months</span>
+                  <span className="font-display text-2xl text-cream tabular">{scheme.tenure} Months</span>
                 </div>
                 <dl className="mt-4 grid grid-cols-2 gap-2 border-t border-gold-light/15 pt-3 text-left text-xs">
                   <div>

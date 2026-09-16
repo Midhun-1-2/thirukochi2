@@ -52,7 +52,6 @@ export function SchemeProvider({ children }: { children: ReactNode }) {
         draft: {
           schemeId: scheme.id,
           amount: scheme.presetAmounts.includes(defaultSelection.amount) ? defaultSelection.amount : scheme.presetAmounts[1] ?? scheme.minAmount,
-          tenure: scheme.defaultTenure,
           paymentMethodId: defaultSelection.paymentMethodId,
         },
       })

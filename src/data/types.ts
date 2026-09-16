@@ -36,8 +36,8 @@ export interface Scheme {
   maxAmount: number
   amountStep: number
   presetAmounts: number[]
-  tenures: number[]
-  defaultTenure: number
+  /** Fixed plan length in months. */
+  tenure: number
   benefits: string[]
   highlight?: string
 }
@@ -52,7 +52,6 @@ export interface PaymentMethod {
 export interface SchemeSelection {
   schemeId: string
   amount: number
-  tenure: number
   paymentMethodId: string
 }
 

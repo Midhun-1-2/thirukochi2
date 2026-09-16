@@ -78,9 +78,8 @@ export const schemes: Scheme[] = [
     maxAmount: 100000,
     amountStep: 500,
     presetAmounts: [1000, 2500, 5000, 10000],
-    tenures: [6, 12, 18, 24],
-    defaultTenure: 12,
-    benefits: ['Flexible tenure', 'Safe & secure', 'Easy monthly contributions', 'Trusted jewellery brand'],
+    tenure: 12,
+    benefits: ['12-month plan', 'Safe & secure', 'Easy monthly contributions', 'Trusted jewellery brand'],
     highlight: 'Most popular',
   },
   {
@@ -95,9 +94,8 @@ export const schemes: Scheme[] = [
     maxAmount: 200000,
     amountStep: 500,
     presetAmounts: [2500, 5000, 10000, 25000],
-    tenures: [12, 18, 24],
-    defaultTenure: 18,
-    benefits: ['Priority collection previews', 'Certified diamonds', 'Flexible tenure', 'Trusted jewellery brand'],
+    tenure: 18,
+    benefits: ['Priority collection previews', 'Certified diamonds', '18-month plan', 'Trusted jewellery brand'],
     highlight: 'New',
   },
   {
@@ -112,9 +110,8 @@ export const schemes: Scheme[] = [
     maxAmount: 500000,
     amountStep: 1000,
     presetAmounts: [10000, 20000, 50000, 100000],
-    tenures: [12, 24, 36],
-    defaultTenure: 24,
-    benefits: ['Fixed tenure', 'Safe & secure', 'Dedicated relationship manager', 'Trusted jewellery brand'],
+    tenure: 24,
+    benefits: ['24-month plan', 'Safe & secure', 'Dedicated relationship manager', 'Trusted jewellery brand'],
   },
 ]
 
@@ -128,7 +125,6 @@ export const paymentMethods: PaymentMethod[] = [
 export const defaultSelection = {
   schemeId: 'gold-savings',
   amount: 5000,
-  tenure: 12,
   paymentMethodId: 'upi',
 } as const
 

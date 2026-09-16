@@ -18,7 +18,7 @@ import { formatINR } from '@/lib/format'
 import { stepVariants } from '@/lib/motion'
 import { clamp, cn } from '@/lib/utils'
 
-const STEPS = ['Scheme', 'Amount', 'Tenure', 'Payment', 'Review']
+const STEPS = ['Scheme', 'Amount', 'Payment', 'Review']
 
 const methodIcons: Record<string, LucideIcon> = { upi: Smartphone, bank: Building2, card: CreditCard, auto: RefreshCcw }
 
@@ -74,7 +74,6 @@ export function JoinScheme() {
       updateDraft({
         schemeId: scheme.id,
         amount: scheme.presetAmounts.includes(draft.amount) ? draft.amount : scheme.presetAmounts[1] ?? scheme.minAmount,
-        tenure: scheme.tenures.includes(draft.tenure) ? draft.tenure : scheme.defaultTenure,
       })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -82,12 +81,12 @@ export function JoinScheme() {
 
   const scheme = getScheme(draft.schemeId) ?? schemes[0]
   const method = getPaymentMethod(draft.paymentMethodId)
-  const total = draft.amount * draft.tenure
+  const total = draft.amount * scheme.tenure
   const maturity = useMemo(() => {
     const d = new Date()
-    d.setMonth(d.getMonth() + draft.tenure)
+    d.setMonth(d.getMonth() + scheme.tenure)
     return d.toLocaleDateString('en-IN', { month: 'short', year: 'numeric' })
-  }, [draft.tenure])
+  }, [scheme.tenure])
 
   const go = (next: number) => {
     setDir(next > step ? 1 : -1)
@@ -99,7 +98,6 @@ export function JoinScheme() {
     updateDraft({
       schemeId: id,
       amount: s.presetAmounts.includes(draft.amount) ? draft.amount : s.presetAmounts[1] ?? s.minAmount,
-      tenure: s.tenures.includes(draft.tenure) ? draft.tenure : s.defaultTenure,
     })
   }
 
@@ -170,7 +168,7 @@ export function JoinScheme() {
                         </div>
                         <p className="mt-3 pr-8 font-display text-base text-maroon">{s.name}</p>
                         <p className="mt-0.5 text-xs text-ink-soft">{s.tagline}</p>
-                        <p className="mt-2 text-xs text-ink-mute tabular">From {formatINR(s.minAmount, { decimals: false })}/mo</p>
+                        <p className="mt-2 text-xs text-ink-mute tabular">From {formatINR(s.minAmount, { decimals: false })}/mo · {s.tenure} months</p>
                       </OptionCard>
                     ))}
                   </div>
@@ -210,44 +208,29 @@ export function JoinScheme() {
                     success={Boolean(customAmount) && !amountError}
                     hint="Optional — or pick a preset above."
                   />
-                  <Card tone="cream" padding="sm" className="mt-4 flex items-center justify-between">
-                    <span className="text-sm text-ink-soft">You will save</span>
-                    <span className="font-display text-xl text-maroon tabular">
-                      {formatINR(draft.amount, { decimals: false })}
-                      <span className="ml-1 text-sm text-ink-mute">/ month</span>
-                    </span>
-                  </Card>
-                </div>
-              )}
-
-              {/* ---------- 3 · Tenure ---------- */}
-              {step === 2 && (
-                <div>
-                  <h2 id="step-title" className="font-display text-xl text-maroon">Tenure</h2>
-                  <p className="mt-1 text-sm text-ink-soft">How long would you like to save for?</p>
-                  <div role="radiogroup" aria-label="Tenure" className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
-                    {scheme.tenures.map((t) => (
-                      <OptionCard key={t} selected={draft.tenure === t} onSelect={() => updateDraft({ tenure: t })} className="text-center">
-                        <p className="font-display text-2xl text-maroon tabular">{t}</p>
-                        <p className="text-xs text-ink-soft">months</p>
-                        <p className="mt-2 text-[11px] text-ink-mute tabular">{formatINR(draft.amount * t, { decimals: false })}</p>
-                      </OptionCard>
-                    ))}
-                  </div>
-                  <Card tone="cream" padding="sm" className="mt-4 grid grid-cols-2 gap-3 text-sm">
-                    <div className="flex items-center gap-2 text-ink-soft">
-                      <CalendarDays size={16} className="text-gold-deep" aria-hidden="true" />
-                      Matures {maturity}
+                  <Card tone="cream" padding="sm" className="mt-4 grid gap-3 text-sm sm:grid-cols-3">
+                    <div>
+                      <p className="text-xs text-ink-mute">You will save</p>
+                      <p className="mt-0.5 font-display text-xl text-maroon tabular">
+                        {formatINR(draft.amount, { decimals: false })}
+                        <span className="ml-1 font-body text-sm text-ink-mute">/ month</span>
+                      </p>
                     </div>
-                    <div className="text-right text-ink-soft">
+                    <div className="flex items-center gap-2 text-ink-soft sm:justify-center">
+                      <CalendarDays size={16} className="shrink-0 text-gold-deep" aria-hidden="true" />
+                      <span>
+                        {scheme.tenure} months · matures <span className="font-medium text-maroon">{maturity}</span>
+                      </span>
+                    </div>
+                    <div className="text-ink-soft sm:text-right">
                       Total <span className="font-medium text-maroon tabular">{formatINR(total, { decimals: false })}</span>
                     </div>
                   </Card>
                 </div>
               )}
 
-              {/* ---------- 4 · Payment ---------- */}
-              {step === 3 && (
+              {/* ---------- 3 · Payment ---------- */}
+              {step === 2 && (
                 <div>
                   <h2 id="step-title" className="font-display text-xl text-maroon">Payment method</h2>
                   <p className="mt-1 text-sm text-ink-soft">Choose how you would like to pay each month.</p>
@@ -272,8 +255,8 @@ export function JoinScheme() {
                 </div>
               )}
 
-              {/* ---------- 5 · Review ---------- */}
-              {step === 4 && (
+              {/* ---------- 4 · Review ---------- */}
+              {step === 3 && (
                 <div>
                   <h2 id="step-title" className="font-display text-xl text-maroon">Review & confirm</h2>
                   <p className="mt-1 text-sm text-ink-soft">Everything look right? You can edit any detail before joining.</p>

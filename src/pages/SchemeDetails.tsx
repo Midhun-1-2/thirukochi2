@@ -40,7 +40,7 @@ export function SchemeDetails() {
   const selection: SchemeSelection =
     draft.schemeId === scheme.id
       ? draft
-      : { schemeId: scheme.id, amount: scheme.presetAmounts[1] ?? scheme.minAmount, tenure: scheme.defaultTenure, paymentMethodId: 'upi' }
+      : { schemeId: scheme.id, amount: scheme.presetAmounts[1] ?? scheme.minAmount, paymentMethodId: 'upi' }
   const method = getPaymentMethod(selection.paymentMethodId)
 
   const proceed = async () => {
@@ -80,7 +80,7 @@ export function SchemeDetails() {
                 <dl className="relative grid grid-cols-3 divide-x divide-gold-light/15 border-t border-gold-light/15 bg-black/10 text-center">
                   {[
                     { label: 'Min. monthly', value: formatINR(scheme.minAmount, { decimals: false }) },
-                    { label: 'Tenure', value: `${scheme.tenures[0]}–${scheme.tenures[scheme.tenures.length - 1]} mo` },
+                    { label: 'Tenure', value: `${scheme.tenure} months` },
                     { label: 'Step', value: formatINR(scheme.amountStep, { decimals: false }) },
                   ].map((d) => (
                     <div key={d.label} className="px-2 py-3.5">

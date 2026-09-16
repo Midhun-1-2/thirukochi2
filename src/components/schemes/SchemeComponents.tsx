@@ -71,7 +71,7 @@ export function SchemeCard({ scheme, className, index = 0 }: { scheme: Scheme; c
               </div>
               <div className="border-x border-gold/20">
                 <dt className="text-[10px] tracking-wider text-ink-mute uppercase">Tenure</dt>
-                <dd className="mt-0.5 text-[13px] font-medium text-maroon tabular">{scheme.tenures[0]}–{scheme.tenures[scheme.tenures.length - 1]} mo</dd>
+                <dd className="mt-0.5 text-[13px] font-medium text-maroon tabular">{scheme.tenure} mo</dd>
               </div>
               <div>
                 <dt className="text-[10px] tracking-wider text-ink-mute uppercase">Monthly</dt>
@@ -114,7 +114,7 @@ export function SchemeRow({ scheme, index = 0, className }: { scheme: Scheme; in
   const delay = 0.1 + index * 0.14
   const stats = [
     { label: 'Min', value: formatINR(scheme.minAmount, { decimals: false }) },
-    { label: 'Months', value: `${scheme.tenures[0]}–${scheme.tenures[scheme.tenures.length - 1]}` },
+    { label: 'Months', value: String(scheme.tenure) },
     { label: 'Monthly', value: formatINR(monthly, { decimals: false }) },
   ]
   return (
@@ -187,12 +187,12 @@ interface SummaryProps {
 }
 
 export function SchemeSummary({ scheme, selection, method, editHref, onEditStep, className, showBenefits = true }: SummaryProps) {
-  const total = selection.amount * selection.tenure
-  const rows: Array<{ label: string; value: string; step: number }> = [
+  const total = selection.amount * scheme.tenure
+  const rows: Array<{ label: string; value: string; step?: number }> = [
     { label: 'Scheme Name', value: scheme.name, step: 0 },
     { label: 'Monthly Amount', value: formatINR(selection.amount, { decimals: false }), step: 1 },
-    { label: 'Tenure', value: `${selection.tenure} Months`, step: 2 },
-    { label: 'Payment Method', value: method?.label ?? '—', step: 3 },
+    { label: 'Tenure', value: `${scheme.tenure} Months` },
+    { label: 'Payment Method', value: method?.label ?? '—', step: 2 },
   ]
   return (
     <Card tone="white" radius="xl" padding="none" className={className}>
@@ -211,11 +211,13 @@ export function SchemeSummary({ scheme, selection, method, editHref, onEditStep,
             <dt className="text-[13px] text-ink-soft">{row.label}</dt>
             <dd className="flex items-center gap-2 text-right text-sm font-medium text-maroon tabular">
               {row.value}
-              {onEditStep && (
-                <button type="button" onClick={() => onEditStep(row.step)} aria-label={`Edit ${row.label}`} className="flex h-8 w-8 items-center justify-center rounded-full text-ink-mute transition hover:bg-maroon-tint hover:text-maroon">
+              {onEditStep && row.step !== undefined ? (
+                <button type="button" onClick={() => onEditStep(row.step!)} aria-label={`Edit ${row.label}`} className="flex h-8 w-8 items-center justify-center rounded-full text-ink-mute transition hover:bg-maroon-tint hover:text-maroon">
                   <Pencil size={13} />
                 </button>
-              )}
+              ) : onEditStep ? (
+                <span className="h-8 w-8" aria-hidden="true" />
+              ) : null}
             </dd>
           </div>
         ))}
