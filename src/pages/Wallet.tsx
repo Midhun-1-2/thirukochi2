@@ -5,7 +5,7 @@ import { RingArt } from '@/components/brand/JewelArt'
 import { GoldParticles } from '@/components/motion/GoldParticles'
 import { CountUp } from '@/components/motion/CountUp'
 import { PageTransition } from '@/components/motion/Primitives'
-import { RollingNumber, TypeIn, WipeReveal } from '@/components/motion/Signature'
+import { RollingNumber, TypeIn, UnfoldReveal } from '@/components/motion/Signature'
 import { Badge, SectionHeading } from '@/components/ui/Basics'
 import { Button } from '@/components/ui/Button'
 import { Card, GoldRule } from '@/components/ui/Card'
@@ -158,7 +158,7 @@ export function Wallet() {
       <div className="space-y-6 pt-5 md:pt-8 lg:pt-4">
         <div className="grid gap-6 lg:grid-cols-12 lg:gap-8">
           <div className="min-w-0 space-y-5 lg:col-span-7">
-            <WipeReveal delay={0.15} duration={1}>
+            <UnfoldReveal delay={0.15} duration={1}>
               {query.status === 'error' ? (
                 <Card tone="maroon" padding="none">
                   <ErrorState tone="dark" title="Wallet unavailable" onRetry={query.retry} />
@@ -221,9 +221,9 @@ export function Wallet() {
                   </div>
                 </Card>
               )}
-            </WipeReveal>
+            </UnfoldReveal>
 
-            <WipeReveal delay={0.4}>
+            <UnfoldReveal delay={0.4}>
               <Card tone="cream" padding="sm" className="flex items-center justify-between gap-3">
                 <div className="min-w-0">
                   <p className="eyebrow text-gold-deep">Reference code</p>
@@ -235,9 +235,9 @@ export function Wallet() {
                   Share
                 </Button>
               </Card>
-            </WipeReveal>
+            </UnfoldReveal>
 
-            <WipeReveal delay={0.55} axis="y">
+            <UnfoldReveal delay={0.55}>
               <Card tone="white" padding="md">
                 <div className="flex items-center gap-2">
                   <Sparkles size={16} className="text-gold-deep" aria-hidden="true" />
@@ -259,13 +259,13 @@ export function Wallet() {
                   ))}
                 </ol>
               </Card>
-            </WipeReveal>
+            </UnfoldReveal>
           </div>
 
           <div className="min-w-0 lg:col-span-5">
-            <WipeReveal delay={0.3}>
+            <UnfoldReveal delay={0.3}>
               <SectionHeading eyebrow="Ledger" title="Referral Credits" />
-            </WipeReveal>
+            </UnfoldReveal>
             <div className="mt-4">
               {query.status === 'error' ? null : !data ? (
                 <div className="space-y-3" aria-hidden="true">

@@ -5,7 +5,7 @@ import { JoinSchemeCTA, PromoBanner, ReferralCard, SocialLinks } from '@/compone
 import { GoldRateCard } from '@/components/gold-rate/GoldRateCard'
 import { CountUp } from '@/components/motion/CountUp'
 import { PageTransition } from '@/components/motion/Primitives'
-import { WipeReveal } from '@/components/motion/Signature'
+import { UnfoldReveal } from '@/components/motion/Signature'
 import { SectionHeading } from '@/components/ui/Basics'
 import { Card } from '@/components/ui/Card'
 import { EmptyState } from '@/components/ui/States'
@@ -47,38 +47,38 @@ export function Home() {
     <PageTransition>
       <div className="pt-5 md:pt-8 lg:pt-4">
         {/* Tablet greeting (mobile shows it in the header, desktop in the top bar) */}
-        <WipeReveal className="mb-5 hidden md:block lg:hidden" delay={0.1}>
+        <UnfoldReveal className="mb-5 hidden md:block lg:hidden" delay={0.1}>
           <p className="eyebrow text-gold-deep">Welcome back</p>
           <h1 className="mt-1 font-display text-2xl text-maroon">
             Good day, <span className="italic font-normal">{user?.name}</span>
           </h1>
-        </WipeReveal>
+        </UnfoldReveal>
 
         <div className="grid gap-5 md:grid-cols-12 md:gap-6 lg:gap-7">
           {/* ---------- primary column ---------- */}
           <div className="space-y-5 md:col-span-7 md:space-y-6 lg:col-span-8 lg:space-y-7">
-            <WipeReveal delay={0.15} duration={1}>
+            <UnfoldReveal delay={0.15} duration={1}>
               <GoldRateCard data={rates.data} status={rates.status} onRetry={rates.retry} />
-            </WipeReveal>
+            </UnfoldReveal>
 
             <div className="grid grid-cols-1 gap-4 xs:grid-cols-2 md:hidden">
-              <WipeReveal delay={0.45}>
+              <UnfoldReveal delay={0.45}>
                 <ReferralCard code={user?.referenceCode ?? 'TKGD123'} />
-              </WipeReveal>
-              <WipeReveal delay={0.55}>
+              </UnfoldReveal>
+              <UnfoldReveal delay={0.55}>
                 <WalletMiniCard />
-              </WipeReveal>
+              </UnfoldReveal>
             </div>
 
-            <WipeReveal className="md:hidden" delay={0.65}>
+            <UnfoldReveal className="md:hidden" delay={0.65}>
               <JoinSchemeCTA />
-            </WipeReveal>
+            </UnfoldReveal>
 
-            <WipeReveal delay={0.4} duration={1.1}>
+            <UnfoldReveal delay={0.4} duration={1.1}>
               <PromoBanner promo={promo} />
-            </WipeReveal>
+            </UnfoldReveal>
 
-            <WipeReveal className="md:hidden" delay={0.8}>
+            <UnfoldReveal className="md:hidden" delay={0.8}>
               <Card tone="cream" padding="sm" className="flex items-center justify-between gap-4">
                 <div>
                   <p className="eyebrow text-gold-deep">Follow us</p>
@@ -86,9 +86,9 @@ export function Home() {
                 </div>
                 <SocialLinks links={social} />
               </Card>
-            </WipeReveal>
+            </UnfoldReveal>
 
-            <WipeReveal inView axis="y" duration={0.8}>
+            <UnfoldReveal inView duration={0.8}>
               <section aria-labelledby="activity-heading">
                 <SectionHeading
                   eyebrow="Timeline"
@@ -109,21 +109,21 @@ export function Home() {
                   )}
                 </div>
               </section>
-            </WipeReveal>
+            </UnfoldReveal>
           </div>
 
           {/* ---------- side column (desktop) ---------- */}
           <aside className="hidden space-y-5 md:col-span-5 md:block lg:col-span-4 lg:space-y-6">
-            <WipeReveal delay={0.35}>
+            <UnfoldReveal delay={0.35}>
               <ReferralCard code={user?.referenceCode ?? 'TKGD123'} />
-            </WipeReveal>
-            <WipeReveal delay={0.5}>
+            </UnfoldReveal>
+            <UnfoldReveal delay={0.5}>
               <WalletMiniCard />
-            </WipeReveal>
-            <WipeReveal delay={0.65}>
+            </UnfoldReveal>
+            <UnfoldReveal delay={0.65}>
               <JoinSchemeCTA compact />
-            </WipeReveal>
-            <WipeReveal delay={0.8}>
+            </UnfoldReveal>
+            <UnfoldReveal delay={0.8}>
               <Card tone="maroon" padding="md" className="grain">
                 <p className="eyebrow text-gold-light/80">Follow Thirukochi</p>
                 <p className="mt-1.5 font-display text-lg text-cream">New collections, first.</p>
@@ -137,7 +137,7 @@ export function Home() {
                   Visit our store page <ArrowUpRight size={13} aria-hidden="true" />
                 </a>
               </Card>
-            </WipeReveal>
+            </UnfoldReveal>
           </aside>
         </div>
       </div>

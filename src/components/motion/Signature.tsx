@@ -215,6 +215,62 @@ export function WipeReveal({ children, className, delay = 0, duration = 0.9, inV
   )
 }
 
+/* ---------- UnfoldReveal ----------
+   A card unfolds toward the viewer: it starts tilted back on a top
+   hinge, slightly small and low, then settles flat with a luxe ease
+   while a soft light sheen crosses its face once. Used for the home
+   and wallet dashboards. */
+interface UnfoldRevealProps {
+  children: ReactNode
+  className?: string
+  delay?: number
+  duration?: number
+  inView?: boolean
+}
+
+export function UnfoldReveal({ children, className, delay = 0, duration = 0.85, inView = false }: UnfoldRevealProps) {
+  const reduced = useReducedMotion()
+  const variants: Variants = reduced
+    ? { hidden: { opacity: 0 }, visible: { opacity: 1, transition: { duration: 0.2 } } }
+    : {
+        hidden: { opacity: 0, y: 36, scale: 0.965, rotateX: -14 },
+        visible: { opacity: 1, y: 0, scale: 1, rotateX: 0, transition: { duration, delay, ease: ease.luxe } },
+      }
+  const sheen: Variants = {
+    hidden: { backgroundPosition: '200% 0', opacity: 0 },
+    visible: {
+      backgroundPosition: '-100% 0',
+      opacity: [0, 1, 1, 0],
+      transition: { duration: duration * 0.9, delay: delay + duration * 0.4, ease: ease.soft },
+    },
+  }
+  return (
+    <motion.div
+      className={cn('relative min-w-0 [perspective:1100px]', className)}
+      initial="hidden"
+      animate={inView ? undefined : 'visible'}
+      whileInView={inView ? 'visible' : undefined}
+      viewport={inView ? viewportOnce : undefined}
+    >
+      <motion.div className="relative min-w-0 origin-top" variants={variants} style={{ willChange: 'transform, opacity', transformStyle: 'preserve-3d' }}>
+        {children}
+        {!reduced && (
+          <motion.span
+            aria-hidden="true"
+            variants={sheen}
+            className="pointer-events-none absolute inset-0 z-20 rounded-[26px] mix-blend-soft-light"
+            style={{
+              backgroundImage: 'linear-gradient(105deg, transparent 42%, rgba(255,255,255,0.55) 50%, transparent 58%)',
+              backgroundSize: '250% 100%',
+              backgroundRepeat: 'no-repeat',
+            }}
+          />
+        )}
+      </motion.div>
+    </motion.div>
+  )
+}
+
 /* ---------- DrawnArt ---------- */
 /**
  * Makes any inline SVG artwork draw itself: strokes trace in, fills bloom after.
