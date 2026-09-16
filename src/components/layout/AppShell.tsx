@@ -76,7 +76,7 @@ function DesktopSidebar({ entrance = false }: { entrance?: boolean }) {
       animate={{ x: 0, opacity: 1 }}
       transition={{ ...spring.soft, delay: 0.2 }}
     >
-      <div className="px-7 pb-6 pt-8">
+      <div className="flex justify-center px-7 pb-6 pt-8">
         <Link to="/home" aria-label="Thirukochi home" className="block">
           <Logo width={168} priority shine />
         </Link>
