@@ -151,6 +151,8 @@ export function GoldRateCard({ data, status, onRetry, className, compact = false
   }
 
   const down = rate.change < 0
+  // Reserve the widest price so the change pill never jumps as rates rotate.
+  const widestPrice = data.rates.map((r) => formatNumberIN(r.price, 2)).reduce((a, b) => (b.length > a.length ? b : a), '')
   const lo = Math.min(...rate.history)
   const hi = Math.max(...rate.history)
   const updated = new Date(data.updatedAt).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })
@@ -211,7 +213,10 @@ export function GoldRateCard({ data, status, onRetry, className, compact = false
           <div className="mt-4 flex flex-wrap items-end gap-x-3 gap-y-1.5">
             <p className="font-display leading-none text-maroon">
               <span className="mr-1 align-top text-[clamp(1.1rem,3vw,1.6rem)] text-gold-deep">₹</span>
-              <RollingNumber value={rate.price} format={(n) => formatNumberIN(n, 2)} className="text-[clamp(2.2rem,6.5vw,3.5rem)] tracking-tight" />
+              <span className="inline-grid text-[clamp(2.2rem,6.5vw,3.5rem)] tracking-tight">
+                <span className="invisible [grid-area:1/1] tabular" aria-hidden="true">{widestPrice}</span>
+                <RollingNumber value={rate.price} format={(n) => formatNumberIN(n, 2)} className="[grid-area:1/1]" />
+              </span>
             </p>
             <AnimatePresence mode="wait" initial={false}>
               <motion.span

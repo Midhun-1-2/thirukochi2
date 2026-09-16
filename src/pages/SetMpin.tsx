@@ -73,7 +73,7 @@ export function SetMpin() {
         </span>
       }
     >
-      <div className="space-y-6">
+      <div className="space-y-3">
         <AnimatePresence mode="wait" initial={false}>
           <motion.p
             key={phase}
@@ -98,7 +98,7 @@ export function SetMpin() {
           disabled={loading || success}
         />
 
-        <div className="min-h-[18px] text-center" aria-live="polite">
+        <div className="min-h-[16px] text-center" aria-live="polite">
           {error && (
             <p role="alert" className="text-xs text-danger">
               {error}
@@ -107,11 +107,11 @@ export function SetMpin() {
         </div>
 
         {phase === 'confirm' ? (
-          <Button type="button" size="lg" fullWidth magnetic loading={loading} success={success} successText="MPIN secured" onClick={submit} disabled={second.length !== authConfig.mpinLength} leading={<ShieldCheck size={17} />}>
+          <Button type="button" size="md" fullWidth magnetic loading={loading} success={success} successText="MPIN secured" onClick={submit} disabled={second.length !== authConfig.mpinLength} leading={<ShieldCheck size={17} />}>
             Continue
           </Button>
         ) : (
-          <Button type="button" size="lg" fullWidth variant="outline" disabled={first.length !== authConfig.mpinLength} onClick={() => setPhase('confirm')}>
+          <Button type="button" size="md" fullWidth variant="outline" disabled={first.length !== authConfig.mpinLength} onClick={() => setPhase('confirm')}>
             Continue
           </Button>
         )}

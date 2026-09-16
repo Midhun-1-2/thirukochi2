@@ -13,7 +13,7 @@ import { useAuth } from '@/context/AuthContext'
 import { useToast } from '@/context/ToastContext'
 import { activity, goldRates } from '@/data/mock'
 import { useIsDesktop, useIsTablet, useReducedMotion } from '@/hooks'
-import { formatDate, formatINR, formatNumberIN, greetingForHour } from '@/lib/format'
+import { formatDate, formatINR, formatNumberIN } from '@/lib/format'
 import { spring } from '@/lib/motion'
 import { cn } from '@/lib/utils'
 
@@ -218,7 +218,7 @@ function MobileHeader({ onBell, unread }: { onBell: () => void; unread: number }
             <Logo variant="emblem" width={30} priority />
           </Link>
           <div className="min-w-0">
-            <p className="truncate text-[10px] tracking-[0.2em] text-gold-light/75 uppercase">{isHome ? greetingForHour() : 'Thirukochi'}</p>
+            <p className="truncate text-[10px] tracking-[0.2em] text-gold-light/75 uppercase">{isHome ? 'Hi' : 'Thirukochi'}</p>
             <p className="truncate font-display text-[22px] leading-tight text-cream">
               {isHome ? (
                 <>
@@ -333,7 +333,7 @@ function DesktopHeader({ onBell, unread }: { onBell: () => void; unread: number 
           <SplitText
             as="h1"
             className="mt-1 font-display text-[28px] text-maroon"
-            words={[`${greetingForHour()},`, { text: user?.name?.split(' ')[0] ?? 'Member', className: 'italic font-normal' }]}
+            words={['Hi,', { text: user?.name?.split(' ')[0] ?? 'Member', className: 'italic font-normal' }]}
             delay={0.1}
           />
         ) : (

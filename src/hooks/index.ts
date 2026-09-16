@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore } from 'react'
 import { useReducedMotion as useFramerReducedMotion } from 'framer-motion'
 import { sleep } from '@/lib/utils'
 
@@ -181,26 +181,28 @@ export function useFitToViewport(padding = 0) {
   const ref = useRef<HTMLDivElement>(null)
   const [fit, setFit] = useState({ scale: 1, height: 0 })
 
-  useEffect(() => {
+  // Layout effect so the first paint is already scaled — no unscaled flash.
+  useLayoutEffect(() => {
     const el = ref.current
     if (!el) return
     let raf = 0
+    const apply = () => {
+      const active = document.activeElement
+      if (active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA')) return
+      const natural = el.offsetHeight
+      const available = window.innerHeight - padding
+      const scale = natural > 0 ? Math.min(1, available / natural) : 1
+      setFit((prev) => (Math.abs(prev.scale - scale) < 0.005 && prev.height === natural ? prev : { scale, height: natural }))
+    }
     const measure = () => {
       cancelAnimationFrame(raf)
-      raf = requestAnimationFrame(() => {
-        const active = document.activeElement
-        if (active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA')) return
-        const natural = el.offsetHeight
-        const available = window.innerHeight - padding
-        const scale = natural > 0 ? Math.min(1, available / natural) : 1
-        setFit((prev) => (Math.abs(prev.scale - scale) < 0.005 && prev.height === natural ? prev : { scale, height: natural }))
-      })
+      raf = requestAnimationFrame(apply)
     }
     const ro = new ResizeObserver(measure)
     ro.observe(el)
     window.addEventListener('resize', measure)
     window.addEventListener('orientationchange', measure)
-    measure()
+    apply()
     return () => {
       cancelAnimationFrame(raf)
       ro.disconnect()

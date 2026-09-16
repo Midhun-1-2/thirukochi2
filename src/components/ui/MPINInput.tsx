@@ -34,7 +34,7 @@ export function MPINDots({ length = 4, value, error, tone = 'light' }: { length?
           <div
             key={i}
             className={cn(
-              'flex h-14 w-12 items-center justify-center rounded-2xl border transition-all duration-300',
+              'flex h-11 w-11 items-center justify-center rounded-2xl border transition-all duration-300',
               dark ? 'border-gold-light/25 bg-white/[0.06]' : 'border-maroon/10 bg-white',
               active && (dark ? 'border-gold-light/80 shadow-[0_0_0_4px_rgba(212,175,55,0.14)]' : 'border-gold shadow-[0_0_0_4px_rgba(212,175,55,0.16)]'),
               filled && (dark ? 'border-gold-light/60' : 'border-gold/70 bg-gold-pale/40'),
@@ -77,7 +77,7 @@ export function NumericKeypad({
   const reduced = useReducedMotion()
   const dark = tone === 'dark'
   return (
-    <div className={cn('mx-auto grid w-full max-w-[300px] grid-cols-3 gap-2.5 xs:gap-3', className)} role="group" aria-label="Numeric keypad">
+    <div className={cn('mx-auto grid w-full max-w-[272px] grid-cols-3 gap-1.5', className)} role="group" aria-label="Numeric keypad">
       {KEYS.map((k, i) => {
         if (k === '') return <span key={`sp-${i}`} aria-hidden="true" />
         const isDel = k === 'del'
@@ -91,7 +91,7 @@ export function NumericKeypad({
             whileTap={reduced ? undefined : { scale: 0.9, backgroundColor: dark ? 'rgba(249,223,146,0.22)' : 'rgba(212,175,55,0.22)' }}
             transition={spring.press}
             className={cn(
-              'flex h-14 items-center justify-center rounded-2xl font-display text-2xl transition-colors duration-200 select-none',
+              'flex h-10 items-center justify-center rounded-xl font-display text-[21px] transition-colors duration-200 select-none',
               dark
                 ? 'bg-white/[0.06] text-cream hover:bg-white/[0.12] border border-gold-light/15'
                 : 'bg-white text-maroon shadow-[0_2px_10px_-4px_rgba(84,0,0,0.12)] border border-maroon/[0.06] hover:border-gold/60 hover:bg-gold-pale/40',
@@ -146,7 +146,7 @@ export function MPINInput({
   }
 
   return (
-    <div className={cn('flex flex-col items-center gap-6', className)}>
+    <div className={cn('flex flex-col items-center gap-3', className)}>
       <button
         type="button"
         className="w-full cursor-text rounded-2xl focus-visible:outline-none"

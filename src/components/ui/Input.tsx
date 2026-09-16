@@ -44,6 +44,8 @@ export function Input({
   const [focused, setFocused] = useState(false)
   const describedBy = error ? `${inputId}-error` : hint ? `${inputId}-hint` : undefined
   const dark = tone === 'dark'
+  // Prefix sits on the value line, so it only shows once the label has floated.
+  const hasValue = rest.value !== undefined ? String(rest.value).length > 0 : Boolean(rest.defaultValue)
 
   return (
     <div className={cn('group', className)}>
@@ -72,8 +74,10 @@ export function Input({
         {prefix && (
           <span
             className={cn(
-              'select-none pl-4 pr-2 text-sm font-medium',
-              icon && 'pl-3',
+              'flex h-full shrink-0 select-none items-center pr-1.5 font-medium tabular transition-opacity duration-200',
+              icon ? 'pl-3' : 'pl-4',
+              dense ? 'pt-3.5 text-[14px]' : 'pt-4 text-[15px]',
+              focused || hasValue ? 'opacity-100' : 'opacity-0',
               dark ? 'text-gold-light/80' : 'text-maroon/70',
             )}
             aria-hidden="true"
@@ -111,7 +115,6 @@ export function Input({
               ? 'text-[14px] peer-focus:top-[10px] peer-focus:text-[10px] peer-focus:tracking-wide peer-[:not(:placeholder-shown)]:top-[10px] peer-[:not(:placeholder-shown)]:text-[10px] peer-[:not(:placeholder-shown)]:tracking-wide'
               : 'peer-focus:top-[13px] peer-focus:text-[11px] peer-focus:tracking-wide peer-[:not(:placeholder-shown)]:top-[13px] peer-[:not(:placeholder-shown)]:text-[11px] peer-[:not(:placeholder-shown)]:tracking-wide',
             icon ? 'left-[44px]' : 'left-4',
-            prefix && (icon ? 'left-[76px]' : 'left-[48px]'),
             dark ? 'text-cream/60 peer-focus:text-gold-light' : 'text-ink-mute peer-focus:text-gold-deep',
             error && 'text-danger peer-focus:text-danger',
           )}

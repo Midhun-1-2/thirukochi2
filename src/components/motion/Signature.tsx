@@ -89,7 +89,7 @@ export function SplitText({ words, as: Tag = 'h1', className, delay = 0.05, stag
         const cls = typeof w === 'string' ? undefined : w.className
         return (
           <span key={i} aria-hidden="true">
-            <span className="inline-block overflow-hidden pb-[0.12em] -mb-[0.12em] align-bottom">
+            <span className="inline-block overflow-hidden pb-[0.12em] -mb-[0.12em] pr-[0.14em] -mr-[0.14em] align-bottom">
               <motion.span variants={reduced ? { hidden: { opacity: 0 }, visible: { opacity: 1 } } : wordVariants} className={cn('inline-block origin-bottom-left', cls)}>
                 {text}
               </motion.span>

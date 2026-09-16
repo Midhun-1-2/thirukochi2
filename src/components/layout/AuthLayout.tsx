@@ -60,7 +60,7 @@ export function AuthLayout() {
   const { ref: fitRef, scale, scaledHeight } = useFitToViewport()
 
   return (
-    <Parallax className="relative flex h-dvh flex-col items-center justify-center overflow-hidden maroon-surface grain text-cream" strength={14}>
+    <Parallax className="relative flex h-dvh flex-col items-center justify-center overflow-clip maroon-surface grain text-cream" strength={14}>
       {/* ---------- stage ornaments ---------- */}
       <GoldParticles count={isDesktop ? 42 : 18} opacity={0.8} />
       <div className="pointer-events-none absolute -left-24 -top-32 h-[420px] w-[420px] rounded-full gold-glow opacity-60 lg:h-[640px] lg:w-[640px]" aria-hidden="true" />
@@ -133,7 +133,8 @@ export function AuthLayout() {
         </section>
 
         {/* arch card */}
-        <div className="relative pt-2 lg:pt-4">
+        {/* reserved height: cards of different sizes never move the stage or the statement */}
+        <div className="relative flex min-h-[min(660px,calc(100dvh_-_170px))] flex-col justify-center pt-2 lg:pt-4">
           <TransitionDirection.Provider value={dir}>
             <AnimatePresence mode="wait" initial={false} custom={dir}>
               {outlet && cloneElement(outlet, { key: location.pathname })}
