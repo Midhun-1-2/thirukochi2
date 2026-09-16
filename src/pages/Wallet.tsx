@@ -149,7 +149,7 @@ export function Wallet() {
   const empty = useDemoFlag('empty')
   const isDesktop = useIsDesktop()
   const reduced = useReducedMotion()
-  const query = useMockQuery(() => (empty ? { ...wallet, balance: 0, pending: 0, lifetime: 0, referrals: [] } : wallet), [empty], { latencyMs: 800, fail })
+  const query = useMockQuery(() => (empty ? { ...wallet, balance: 0, pending: 0, lifetime: 0, referrals: [] } : wallet), [empty], { fail })
   const data = query.data
   const successful = data?.referrals.filter((r) => r.status === 'credited').length ?? 0
 

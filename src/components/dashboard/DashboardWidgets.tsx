@@ -21,8 +21,8 @@ export function ReferralCard({ code, className }: { code: string; className?: st
   return (
     <Card tone="cream" padding="sm" className={cn('flex items-center justify-between gap-3', className)}>
       <div className="min-w-0">
-        <p className="eyebrow text-gold-deep">Ref. Code</p>
-        <p className="mt-0.5 font-display text-xl tracking-[0.08em] text-maroon">
+        <p className="eyebrow font-ui text-gold-ink">Ref. Code</p>
+        <p className="mt-0.5 font-figures text-xl font-semibold tracking-[0.06em] text-maroon tabular">
           <TypeIn text={code} delay={0.9} speed={0.09} />
         </p>
       </div>

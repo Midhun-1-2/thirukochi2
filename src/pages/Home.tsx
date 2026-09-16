@@ -19,11 +19,11 @@ function WalletMiniCard() {
     <Card tone="white" padding="sm" interactive className="group">
       <Link to="/wallet" className="flex items-center justify-between gap-3 focus-visible:outline-none" aria-label="Open referral wallet">
         <div className="min-w-0">
-          <p className="eyebrow text-gold-deep">Referral Bonus</p>
-          <p className="mt-0.5 font-display text-xl text-maroon tabular">
+          <p className="eyebrow font-ui text-gold-ink">Referral Bonus</p>
+          <p className="mt-0.5 font-figures text-xl font-semibold text-maroon tabular">
             <CountUp value={wallet.balance} format={(n) => formatINR(n, { decimals: false })} duration={1} />
           </p>
-          <p className="text-xs text-ink-mute tabular">
+          <p className="font-ui text-xs text-ink-soft tabular">
             {wallet.referrals.filter((r) => r.status !== 'redeemed').length} referrals · {formatINR(wallet.pending, { decimals: false })} pending
           </p>
         </div>
@@ -40,7 +40,7 @@ export function Home() {
   const { user } = useAuth()
   const rateFail = useDemoFlag('rate-error')
   const emptyActivity = useDemoFlag('empty-activity')
-  const rates = useMockQuery(() => goldRates, [], { latencyMs: 900, fail: rateFail })
+  const rates = useMockQuery(() => goldRates, [], { fail: rateFail })
   const recent = emptyActivity ? [] : activity.slice(0, 4)
 
   return (

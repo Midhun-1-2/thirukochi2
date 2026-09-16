@@ -17,7 +17,7 @@ export function Activity() {
   const [filter, setFilter] = useState<Filter>('all')
   const fail = useDemoFlag('error')
   const empty = useDemoFlag('empty')
-  const query = useMockQuery(() => (empty ? [] : allActivity), [empty], { latencyMs: 650, fail })
+  const query = useMockQuery(() => (empty ? [] : allActivity), [empty], { fail })
   const items = useMemo(() => (query.data ?? []).filter((a) => filter === 'all' || a.category === filter), [query.data, filter])
 
   const options = [

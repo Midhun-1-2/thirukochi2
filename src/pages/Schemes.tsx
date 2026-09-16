@@ -27,7 +27,7 @@ export function Schemes() {
   useDocumentTitle('Schemes')
   const [filter, setFilter] = useState<Filter>('all')
   const fail = useDemoFlag('error')
-  const query = useMockQuery(() => schemes, [], { latencyMs: 700, fail })
+  const query = useMockQuery(() => schemes, [], { fail })
   const isDesktop = useIsDesktop()
   /** Vitrine grid needs ~300px per card; below that the index rows keep the page short. */
   const wide = useMediaQuery('(min-width: 1280px)')

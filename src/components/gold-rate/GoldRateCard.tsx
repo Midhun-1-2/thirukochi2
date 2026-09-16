@@ -181,8 +181,8 @@ export function GoldRateCard({ data, status, onRetry, className, compact = false
       {/* Every label stays on one unbroken line; on narrow phones the clock + badge drop to a second row instead. */}
       <div className="relative flex min-h-11 flex-wrap items-center justify-between gap-x-4 gap-y-1.5 overflow-hidden maroon-surface px-5 py-2 sm:px-6">
         <div className="pointer-events-none absolute -right-10 -top-10 h-28 w-28 rounded-full gold-glow opacity-70" aria-hidden="true" />
-        <p className="relative whitespace-nowrap text-[12px] font-medium tracking-[0.16em] text-gold-light uppercase">Today&apos;s Gold Rate</p>
-        <div className="relative ml-auto flex items-center gap-3 whitespace-nowrap text-[12px] text-cream/80">
+        <p className="relative whitespace-nowrap font-ui text-[12px] font-medium tracking-[0.16em] text-gold-light uppercase">Today&apos;s Gold Rate</p>
+        <div className="relative ml-auto flex items-center gap-3 whitespace-nowrap font-ui text-[12px] text-cream/80">
           <time dateTime={now.toISOString()}>
             {now.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })} ·{' '}
             {/* Poppins has no tabular figures — reserve the widest digit so the ticking clock never nudges the badge */}
@@ -211,8 +211,8 @@ export function GoldRateCard({ data, status, onRetry, className, compact = false
                   aria-checked={active}
                   onClick={() => setSelectedId(r.id)}
                   className={cn(
-                    'relative pb-1.5 text-[11px] font-medium tracking-[0.16em] uppercase transition-colors duration-300',
-                    active ? 'text-maroon' : 'text-ink-mute hover:text-maroon',
+                    'relative pb-1.5 font-ui text-[11px] font-medium tracking-[0.16em] uppercase transition-colors duration-300',
+                    active ? 'text-maroon' : 'text-ink-soft hover:text-maroon',
                   )}
                 >
                   {r.label}
@@ -239,7 +239,7 @@ export function GoldRateCard({ data, status, onRetry, className, compact = false
           </div>
 
           <div className="mt-4 flex flex-wrap items-end gap-x-3 gap-y-1.5">
-            <p className="font-display leading-none text-maroon">
+            <p className="font-figures font-semibold leading-none text-maroon">
               <span className="mr-1 align-top text-[clamp(1.1rem,3vw,1.6rem)] text-gold-deep">₹</span>
               <span className="inline-grid text-[clamp(2.2rem,6.5vw,3.5rem)] tracking-tight">
                 <span className="invisible [grid-area:1/1] tabular" aria-hidden="true">{widestPrice}</span>
@@ -254,7 +254,7 @@ export function GoldRateCard({ data, status, onRetry, className, compact = false
                 exit={{ opacity: 0, y: -6 }}
                 transition={{ duration: 0.2 }}
                 className={cn(
-                  'mb-1 inline-flex h-6 items-center gap-1 rounded-full px-2 text-[11px] font-medium tabular',
+                  'mb-1 inline-flex h-6 items-center gap-1 rounded-full px-2 font-ui text-[11px] font-medium tabular',
                   down ? 'bg-maroon-tint text-maroon' : 'bg-gold-pale text-gold-deep',
                 )}
                 aria-label={`${down ? 'Down' : 'Up'} ${formatINR(Math.abs(rate.change))} since last update`}
@@ -271,7 +271,7 @@ export function GoldRateCard({ data, status, onRetry, className, compact = false
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
-              className="mt-2 text-xs text-ink-mute"
+              className="mt-2 font-ui text-xs text-ink-soft"
             >
               per {rate.weightGrams} gram{rate.weightGrams > 1 ? 's' : ''} · {rate.purity} · indicative, showroom rate applies
             </motion.p>
@@ -281,7 +281,7 @@ export function GoldRateCard({ data, status, onRetry, className, compact = false
         {/* ---------- sparkline ---------- */}
         {!compact && (
           <div className="border-t border-gold/20 pt-3 lg:border-l lg:border-t-0 lg:pl-6 lg:pt-0">
-            <div className="flex items-center justify-between text-[10px] tracking-[0.14em] text-ink-mute uppercase">
+            <div className="flex items-center justify-between font-ui text-[10px] tracking-[0.14em] text-ink-soft uppercase">
               <span>12 updates</span>
               <span className="tabular">
                 {formatINR(lo, { decimals: false })} – {formatINR(hi, { decimals: false })}

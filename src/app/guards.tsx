@@ -1,18 +1,6 @@
-import { Suspense, type ReactNode } from 'react'
+import type { ReactNode } from 'react'
 import { Navigate, Outlet, useLocation } from 'react-router-dom'
 import { useAuth } from '@/context/AuthContext'
-
-export function RouteFallback() {
-  return (
-    <div className="flex min-h-[40vh] items-center justify-center" aria-busy="true" aria-label="Loading">
-      <span className="h-8 w-8 animate-spin rounded-full border-2 border-gold/30 border-t-gold" />
-    </div>
-  )
-}
-
-export function Lazy({ children }: { children: ReactNode }) {
-  return <Suspense fallback={<RouteFallback />}>{children}</Suspense>
-}
 
 /** Requires a signed-in member; remembers where they were heading. */
 export function RequireAuth() {

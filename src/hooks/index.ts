@@ -1,6 +1,5 @@
-import { useCallback, useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react'
 import { useReducedMotion as useFramerReducedMotion } from 'framer-motion'
-import { sleep } from '@/lib/utils'
 
 /* ---------- media queries ---------- */
 function subscribeMedia(query: string, cb: () => void) {
@@ -103,37 +102,26 @@ export type QueryState<T> =
   | { status: 'success'; data: T; error?: undefined }
 
 interface MockQueryOptions {
-  latencyMs?: number
   /** Force the error state (e.g. `?demo=error`). */
   fail?: boolean
 }
 
+/**
+ * Mock data is local, so it resolves in the same render — no skeleton
+ * between pages, only the route transition. The `loading` state stays in
+ * the union so screens keep their skeletons for when a real API lands.
+ */
 export function useMockQuery<T>(loader: () => T, deps: unknown[], opts: MockQueryOptions = {}) {
-  const { latencyMs = 800, fail = false } = opts
+  const { fail = false } = opts
   const [attempt, setAttempt] = useState(0)
   const depsKey = JSON.stringify(deps)
-  const key = `${attempt}|${depsKey}`
-  const [result, setResult] = useState<{ key: string; value: QueryState<T> } | null>(null)
-  const loaderRef = useRef(loader)
 
-  useEffect(() => {
-    loaderRef.current = loader
-  })
-
-  useEffect(() => {
-    let cancelled = false
-    sleep(latencyMs).then(() => {
-      if (cancelled) return
-      const value: QueryState<T> =
-        fail && attempt === 0 ? { status: 'error', error: 'Something went wrong' } : { status: 'success', data: loaderRef.current() }
-      setResult({ key, value })
-    })
-    return () => {
-      cancelled = true
-    }
-  }, [key, attempt, latencyMs, fail])
-
-  const state: QueryState<T> = result && result.key === key ? result.value : { status: 'loading' }
+  const state = useMemo<QueryState<T>>(
+    () => (fail && attempt === 0 ? { status: 'error', error: 'Something went wrong' } : { status: 'success', data: loader() }),
+    // the caller's deps array (as depsKey) decides when to re-run the loader, not the loader's identity
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [attempt, depsKey, fail],
+  )
   const retry = useCallback(() => setAttempt((a) => a + 1), [])
   return { ...state, retry }
 }

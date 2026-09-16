@@ -14,6 +14,8 @@
   --color-gold: #d4af37;
   --color-gold-light: #f9df92;
   --color-gold-deep: #b3871c;
+  /* darker gold for small labels on white/cream — 5.9:1, AA for body text */
+  --color-gold-ink: #7a5c0e;
   --color-gold-pale: #fbf1cf;
 
   --color-cream: #fff8e7;
@@ -32,6 +34,10 @@
 
   --font-display: 'Playfair Display Variable', 'Playfair Display', Georgia, 'Times New Roman', serif;
   --font-body: 'Poppins', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  /* screen-legibility face (tall x-height, tabular figures) for dense stat labels */
+  --font-ui: 'Inter Variable', 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  /* warm soft-serif for hero figures — character without losing legibility at 20px */
+  --font-figures: 'Fraunces Variable', 'Fraunces', Georgia, 'Times New Roman', serif;
 
   --radius-xs: 8px;
   --radius-sm: 12px;
@@ -126,6 +132,12 @@
 /* ---------- material utilities ---------- */
 @utility font-display { font-family: var(--font-display); }
 @utility font-body { font-family: var(--font-body); }
+@utility font-ui { font-family: var(--font-ui); }
+@utility font-figures {
+  font-family: var(--font-figures);
+  font-optical-sizing: auto;
+  font-variation-settings: 'SOFT' 40;
+}
 
 @utility gold-text {
   background: linear-gradient(110deg, #b3871c 0%, #d4af37 35%, #f9df92 55%, #d4af37 75%, #b3871c 100%);
