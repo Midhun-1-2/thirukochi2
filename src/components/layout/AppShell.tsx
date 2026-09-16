@@ -1,9 +1,9 @@
 import { cloneElement, useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Link, NavLink, useLocation, useNavigate, useOutlet } from 'react-router-dom'
-import { ArrowDownRight, ArrowUpRight, Bell, LogOut, ChevronRight } from 'lucide-react'
+import { Bell, LogOut, ChevronRight } from 'lucide-react'
 import { isNavActive, pageTitles, primaryNav } from '@/app/navigation'
-import { BangleArt, Flourish } from '@/components/brand/JewelArt'
+import { BangleArt } from '@/components/brand/JewelArt'
 import { Logo } from '@/components/brand/Logo'
 import { GoldParticles } from '@/components/motion/GoldParticles'
 import { SplitText } from '@/components/motion/Signature'
@@ -208,56 +208,50 @@ function MobileHeader({ onBell, unread }: { onBell: () => void; unread: number }
       </div>
       {!reduced && <GoldParticles count={10} opacity={0.55} />}
 
-      <div className="relative flex items-center justify-between gap-3 px-[var(--page-x)] pt-[calc(var(--safe-top)+0.85rem)]">
-        <div className="flex min-w-0 items-center gap-3">
+      {/* row 1 — the lockup hangs from the top edge like a pendant on a gold chain;
+          bell and avatar sit on the chain either side */}
+      <div className="relative px-[var(--page-x)] pt-[var(--safe-top)]">
+        <div className="pointer-events-none absolute inset-x-0 top-[calc(var(--safe-top)+36px)] h-px bg-gradient-to-r from-transparent via-gold/50 to-transparent" aria-hidden="true" />
+        <div className="relative flex items-start justify-between">
+          <IconButton label="Notifications" tone="dark" size="sm" onClick={onBell} badge={unread > 0} className="mt-4 bg-maroon-deep/80 backdrop-blur-sm">
+            <Bell size={17} strokeWidth={1.8} />
+          </IconButton>
           <Link
             to="/home"
             aria-label="Thirukochi home"
-            className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-gold/60 bg-white/[0.05] shadow-[0_0_0_4px_rgba(212,175,55,0.10)]"
+            className="pendant-tile flex rounded-b-[26px] border border-t-0 border-gold/70 px-4 pb-2.5 pt-2"
           >
-            <Logo variant="emblem" width={30} priority />
+            <Logo width={104} priority shine decode="sync" />
           </Link>
-          <div className="min-w-0">
-            <p className="truncate text-[10px] tracking-[0.2em] text-gold-light/75 uppercase">{isHome ? 'Hi' : 'Thirukochi'}</p>
-            <p className="truncate font-display text-[22px] leading-tight text-cream">
-              {isHome ? (
-                <>
-                  {first} {rest.length > 0 && <span className="italic font-normal gold-text">{rest.join(' ')}</span>}
-                </>
-              ) : (
-                title
-              )}
-            </p>
+          {/* same footprint as the bell so the pendant sits dead centre */}
+          <div className="mt-4 flex h-10 w-10 items-center justify-end">
+            <Link to="/profile" aria-label="Profile" className="rounded-full shadow-[0_0_0_3px_rgba(212,175,55,0.22)]">
+              <Avatar name={user?.name ?? 'Member'} size={36} tone="gold" />
+            </Link>
           </div>
-        </div>
-        <div className="flex shrink-0 items-center gap-2">
-          <IconButton label="Notifications" tone="dark" size="sm" onClick={onBell} badge={unread > 0}>
-            <Bell size={17} strokeWidth={1.8} />
-          </IconButton>
-          <Link to="/profile" aria-label="Profile" className="rounded-full shadow-[0_0_0_3px_rgba(212,175,55,0.22)]">
-            <Avatar name={user?.name ?? 'Member'} size={40} tone="gold" />
-          </Link>
         </div>
       </div>
 
-      {/* ornament rule (home, big rate card below) / live rate ticker (other pages) */}
-      <div className="relative px-[var(--page-x)] pb-9 pt-4">
-        {!isHome ? (
+      {/* row 2 — greeting (home) or page title + compact live rate (elsewhere) */}
+      <div className="relative flex flex-wrap items-center justify-between gap-x-3 gap-y-2 px-[var(--page-x)] pb-9 pt-3">
+        <p className="min-w-0 max-w-full truncate font-display text-[22px] leading-tight text-cream">
+          {isHome ? (
+            <>
+              Hi, {first} {rest.length > 0 && <span className="italic font-normal gold-text">{rest.join(' ')}</span>}
+            </>
+          ) : (
+            title
+          )}
+        </p>
+        {!isHome && (
           <Link
             to="/home"
             aria-label={`Live gold rate ${formatINR(rate.price)} per gram, ${down ? 'down' : 'up'} ${formatINR(Math.abs(rate.change))}`}
-            className="glass-maroon flex h-11 items-center gap-3 rounded-full pl-2 pr-4"
+            className="glass-maroon ml-auto flex h-9 shrink-0 items-center gap-2 rounded-full pl-1.5 pr-3"
           >
             <LiveBadge />
-            <span className="text-[11px] tracking-wider text-cream/70 uppercase">1g · 22K</span>
-            <span className="ml-auto text-sm font-medium gold-text tabular">₹{formatNumberIN(rate.price, 2)}</span>
-            <span className={cn('flex items-center text-xs tabular', down ? 'text-[#ffc7bd]' : 'text-gold-light')}>
-              {down ? <ArrowDownRight size={13} aria-hidden="true" /> : <ArrowUpRight size={13} aria-hidden="true" />}
-              {formatINR(Math.abs(rate.change), { decimals: false })}
-            </span>
+            <span className="text-[13px] font-medium gold-text tabular">₹{formatNumberIN(rate.price, 2)}</span>
           </Link>
-        ) : (
-          <Flourish className="w-28" />
         )}
       </div>
 
