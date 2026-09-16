@@ -211,7 +211,15 @@ export function Wallet() {
                       </div>
                     </dl>
                     <div className="mt-6 grid grid-cols-2 gap-2.5 sm:gap-3">
-                      <Button size="lg" className="px-3 sm:px-7" leading={<Share2 size={17} />} onClick={() => setAction('share')}>
+                      {/* invisible trailing spacer mirrors the icon so the label sits dead centre;
+                          both drop out under 340px where the pair no longer fits */}
+                      <Button
+                        size="lg"
+                        className="px-3 sm:px-7"
+                        leading={<Share2 size={17} className="hidden min-[340px]:block" />}
+                        trailing={<span className="hidden w-[17px] min-[340px]:block" />}
+                        onClick={() => setAction('share')}
+                      >
                         Share Code
                       </Button>
                       <Button size="lg" variant="onMaroon" className="px-3 sm:px-7" leading={<Gift size={17} />} onClick={() => setAction('redeem')} disabled={data.balance <= 0}>
