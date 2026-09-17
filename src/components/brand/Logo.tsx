@@ -43,7 +43,12 @@ export function Logo({ variant = 'full', className, width, priority = false, shi
   const w = width ?? 220
   const picture = (
     <picture className={cn('block', !shine && className)}>
-      <source srcSet="/assets/logo/thirukochi-logo.webp" type="image/webp" />
+      {/* sized candidates: the browser used to decode the 2262px master for a 104px pendant */}
+      <source
+        srcSet="/assets/logo/thirukochi-logo-400.webp 400w, /assets/logo/thirukochi-logo-800.webp 800w, /assets/logo/thirukochi-logo-1200.webp 1200w, /assets/logo/thirukochi-logo.webp 2262w"
+        sizes={`${w}px`}
+        type="image/webp"
+      />
       <img
         src="/assets/logo/thirukochi-logo-800.png"
         srcSet="/assets/logo/thirukochi-logo-400.png 400w, /assets/logo/thirukochi-logo-800.png 800w, /assets/logo/thirukochi-logo.png 2262w"
@@ -63,7 +68,7 @@ export function Logo({ variant = 'full', className, width, priority = false, shi
   return (
     <span className={cn('relative inline-block', className)} style={{ width: w, maxWidth: '100%' }}>
       {picture}
-      <span className="logo-shine" style={{ ['--logo-mask' as string]: 'url(/assets/logo/thirukochi-logo-800.png)' }} aria-hidden="true" />
+      <span className="logo-shine" style={{ ['--logo-mask' as string]: 'url(/assets/logo/thirukochi-logo-800.webp)' }} aria-hidden="true" />
     </span>
   )
 }

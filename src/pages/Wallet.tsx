@@ -210,14 +210,16 @@ export function Wallet() {
                         <dd className="mt-0.5 text-sm font-medium text-cream tabular">{successful}</dd>
                       </div>
                     </dl>
-                    <div className="mt-6 grid grid-cols-2 gap-2.5 sm:gap-3">
-                      {/* invisible trailing spacer mirrors the icon so the label sits dead centre;
-                          both drop out under 340px where the pair no longer fits */}
+                    <div className="@container mt-6 grid grid-cols-2 gap-2.5 sm:gap-3">
+                      {/* label dead centre: the size padding is forced down (the plain px-3 lost
+                          to lg's px-7 and the label spilled right), an invisible trailing spacer
+                          mirrors the icon, and both drop out while the half-width button is too
+                          narrow for icon + label (row under 342px — phones and the 1024px column) */}
                       <Button
                         size="lg"
-                        className="px-3 sm:px-7"
-                        leading={<Share2 size={17} className="hidden min-[340px]:block" />}
-                        trailing={<span className="hidden w-[17px] min-[340px]:block" />}
+                        className="px-3!"
+                        leading={<Share2 size={17} className="hidden @min-[342px]:block" />}
+                        trailing={<span className="hidden w-[17px] @min-[342px]:block" />}
                         onClick={() => setAction('share')}
                       >
                         Share Code
