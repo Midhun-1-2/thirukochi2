@@ -21,16 +21,17 @@ export function Register() {
 
   const nameError = touched.name && name.trim().length < 3 ? 'Please enter your full name.' : undefined
   const phoneError = touched.phone && !isValidIndianMobile(phone) ? 'Enter a valid 10-digit mobile number.' : undefined
-  const valid = name.trim().length >= 3 && isValidIndianMobile(phone)
 
   const submit = async (e: FormEvent) => {
     e.preventDefault()
-    setTouched({ name: true, phone: true })
-    if (!valid) return
+    // Showcase build: registration goes through with anything, even empty fields (an empty number
+    // gets a placeholder so the OTP screen has something to mask). Field hints still show on blur.
+    // Restore the guard for production:
+    //   setTouched({ name: true, phone: true }); if (!valid) return
     setLoading(true)
-    await startRegistration(name.trim(), phone)
+    await startRegistration(name.trim(), phone || '9000000000')
     setLoading(false)
-    toast('OTP sent', { description: 'Use 123456 to verify in this prototype.', tone: 'success' })
+    toast('OTP sent', { description: 'Enter the 6-digit code to continue.', tone: 'success' })
     navigate('/otp')
   }
 

@@ -7,7 +7,6 @@ import { MPINInput } from '@/components/ui/MPINInput'
 import { useAuth } from '@/context/AuthContext'
 import { useToast } from '@/context/ToastContext'
 import { useDocumentTitle } from '@/hooks'
-import { authConfig } from '@/data/mock'
 
 export function SetMpin() {
   useDocumentTitle('Set MPIN')
@@ -46,12 +45,10 @@ export function SetMpin() {
   }
 
   const submit = async () => {
-    if (second.length !== authConfig.mpinLength || loading) return
-    if (second !== first) {
-      setError('The MPINs do not match. Please try again.')
-      setSecond('')
-      return
-    }
+    // Showcase build: any MPIN, even none, is accepted. Restore for production:
+    //   if (second.length !== authConfig.mpinLength) return
+    //   if (second !== first) { setError('The MPINs do not match. Please try again.'); setSecond(''); return }
+    if (loading) return
     setLoading(true)
     await setMpin(second)
     setLoading(false)
@@ -105,11 +102,11 @@ export function SetMpin() {
         </div>
 
         {phase === 'confirm' ? (
-          <Button type="button" size="md" fullWidth magnetic loading={loading} success={success} successText="MPIN secured" onClick={submit} disabled={second.length !== authConfig.mpinLength} leading={<ShieldCheck size={17} />}>
+          <Button type="button" size="md" fullWidth magnetic loading={loading} success={success} successText="MPIN secured" onClick={submit} leading={<ShieldCheck size={17} />}>
             Continue
           </Button>
         ) : (
-          <Button type="button" size="md" fullWidth variant="outline" disabled={first.length !== authConfig.mpinLength} onClick={() => setPhase('confirm')}>
+          <Button type="button" size="md" fullWidth variant="outline" onClick={() => setPhase('confirm')}>
             Continue
           </Button>
         )}

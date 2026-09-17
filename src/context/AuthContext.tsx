@@ -64,7 +64,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const verifyOtp = useCallback(
     async (otp: string) => {
       await sleep(authConfig.latencyMs)
-      if (otp !== authConfig.otp) return false
+      // Showcase build: any code verifies. Restore `if (otp !== authConfig.otp) return false` for production.
+      void otp
       persist({ ...state, pending: state.pending ? { ...state.pending, verified: true } : null })
       return true
     },
@@ -100,17 +101,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const login = useCallback(
     async (phone: string, mpin: string) => {
       await sleep(authConfig.latencyMs)
+      // Showcase build: any phone + MPIN signs in. A number registered in this demo keeps its own
+      // name; anything else walks in as the showcase member. Restore the MPIN check for production.
+      void mpin
       const account = state.accounts[phone]
-      if (!account || account.mpin !== mpin) {
-        return { ok: false as const, error: 'The phone number or MPIN is incorrect.' }
-      }
-      const user: UserProfile = {
-        name: account.name,
-        phone,
-        referenceCode: account.referenceCode,
-        memberSince: phone === demoUser.phone ? demoUser.memberSince : 'September 2026',
-        email: phone === demoUser.phone ? demoUser.email : undefined,
-      }
+      const user: UserProfile = account
+        ? {
+            name: account.name,
+            phone,
+            referenceCode: account.referenceCode,
+            memberSince: phone === demoUser.phone ? demoUser.memberSince : 'September 2026',
+            email: phone === demoUser.phone ? demoUser.email : undefined,
+          }
+        : { ...demoUser, phone: phone || demoUser.phone }
       persist({ ...state, user })
       return { ok: true as const }
     },

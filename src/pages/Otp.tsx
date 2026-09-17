@@ -31,7 +31,9 @@ export function Otp() {
   }, [pending, navigate])
 
   const verify = async (value = otp) => {
-    if (value.length !== authConfig.otpLength || loading) return
+    // Showcase build: any code, even none, verifies. Restore for production:
+    //   if (value.length !== authConfig.otpLength) return
+    if (loading) return
     setLoading(true)
     setError(null)
     const ok = await verifyOtp(value)
@@ -87,7 +89,7 @@ export function Otp() {
           )}
         </div>
 
-        <Button type="button" size="lg" fullWidth magnetic loading={loading} success={success} successText="Verified" loadingText="Verifying" onClick={() => verify()} disabled={otp.length !== authConfig.otpLength} leading={<ShieldCheck size={17} />}>
+        <Button type="button" size="lg" fullWidth magnetic loading={loading} success={success} successText="Verified" loadingText="Verifying" onClick={() => verify()} leading={<ShieldCheck size={17} />}>
           Verify
         </Button>
 

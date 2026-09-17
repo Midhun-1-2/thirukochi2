@@ -9,6 +9,7 @@ import { GoldParticles } from '@/components/motion/GoldParticles'
 import { SplitText } from '@/components/motion/Signature'
 import { WELCOME_FLAG, WelcomeVeil } from '@/components/motion/WelcomeVeil'
 import { Avatar, IconButton, LiveBadge } from '@/components/ui/Basics'
+import { Button } from '@/components/ui/Button'
 import { Modal } from '@/components/ui/Modal'
 import { useAuth } from '@/context/AuthContext'
 import { useToast } from '@/context/ToastContext'
@@ -68,6 +69,14 @@ function DesktopSidebar({ entrance = false }: { entrance?: boolean }) {
   const location = useLocation()
   const { toast } = useToast()
   const reduced = useReducedMotion()
+  const [confirmLogout, setConfirmLogout] = useState(false)
+
+  const doLogout = () => {
+    setConfirmLogout(false)
+    logout()
+    toast('Signed out', { description: 'See you again soon.', tone: 'info' })
+    navigate('/login')
+  }
 
   return (
     <motion.aside
@@ -131,17 +140,29 @@ function DesktopSidebar({ entrance = false }: { entrance?: boolean }) {
           </div>
           <button
             type="button"
-            onClick={() => {
-              logout()
-              toast('Signed out', { description: 'See you again soon.', tone: 'info' })
-              navigate('/login')
-            }}
+            onClick={() => setConfirmLogout(true)}
             className="mt-3 flex h-10 w-full items-center justify-center gap-2 rounded-xl border border-gold-light/20 text-xs font-medium text-cream/80 transition hover:border-gold-light/50 hover:text-cream"
           >
             <LogOut size={14} /> Logout
           </button>
         </div>
       </div>
+
+      {/* same confirmation as the Profile page's logout */}
+      <Modal
+        open={confirmLogout}
+        onClose={() => setConfirmLogout(false)}
+        title="Log out?"
+        size="sm"
+        footer={
+          <div className="grid grid-cols-2 gap-3">
+            <Button variant="outline" onClick={() => setConfirmLogout(false)}>Stay</Button>
+            <Button variant="maroon" onClick={doLogout} leading={<LogOut size={15} />}>Logout</Button>
+          </div>
+        }
+      >
+        <p>You will need your phone number and MPIN to sign in again.</p>
+      </Modal>
     </motion.aside>
   )
 }

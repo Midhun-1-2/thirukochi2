@@ -74,7 +74,6 @@ export function Login() {
   const phoneError = touched.phone && !isValidIndianMobile(phone) ? 'Enter a valid 10-digit mobile number.' : undefined
   const mpinError = touched.mpin && mpin.length !== 4 ? 'Enter your 4-digit MPIN.' : undefined
   const captchaError = touched.captcha && captchaInput !== captcha ? 'Captcha does not match.' : undefined
-  const valid = isValidIndianMobile(phone) && mpin.length === 4 && captchaInput === captcha
 
   const refreshCaptcha = () => {
     setCaptcha(generateCaptcha())
@@ -84,9 +83,10 @@ export function Login() {
 
   const submit = async (e: FormEvent) => {
     e.preventDefault()
-    setTouched({ phone: true, mpin: true, captcha: true })
+    // Showcase build: Login goes through with anything, even empty fields. Field hints still show on
+    // blur so the form reads as real. Restore the guard for production:
+    //   setTouched({ phone: true, mpin: true, captcha: true }); if (!valid) return
     setFormError(null)
-    if (!valid) return
     setLoading(true)
     // raised before the guard can redirect us; the shell consumes it on mount
     try {
@@ -123,7 +123,6 @@ export function Login() {
           <Link to="/register" className="font-medium text-maroon underline-offset-4 hover:underline">
             Create an account
           </Link>
-          <p className="mt-2 text-[11px] text-ink-mute">Demo: 98765 43210 · MPIN 1234</p>
         </>
       }
     >
